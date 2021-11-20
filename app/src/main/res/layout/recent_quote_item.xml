@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
             android:background="@color/white"
-            android:src="@drawable/ic_share"
+            android:src="@drawable/ic_search"
             app:layout_constraintBottom_toBottomOf="@+id/recent_quote_category_tv"
             app:layout_constraintDimensionRatio=""
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
