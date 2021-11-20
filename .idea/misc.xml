@@ -3,15 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/drawable-anydpi/ic__empty_heart.xml" value="0.36153846153846153" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2109375" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/drawable-v24/ic_launchertest_foreground.xml" value="0.2109375" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/drawable/ic_home_24.xml" value="0.1" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/drawable/recent_fav_image_btn.xml" value="0.32222222222222224" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/activity_main.xml" value="0.2749094202898551" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/categorie_item.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/fragment_author.xml" value="0.23143115942028986" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/fragment_favorite.xml" value="0.23143115942028986" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/fragment_home.xml" value="0.23143115942028986" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/latest_quote_item.xml" value="0.25" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/recent_quote_item.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/menu/navigation_menu.xml" value="0.1" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/menu/noti_search_menu.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/mipmap-anydpi-v26/ic_friendship_cg.xml" value="0.3671875" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/mipmap-anydpi-v26/ic_friendship_cg_round.xml" value="0.2109375" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/mipmap-anydpi-v26/ic_launchertest.xml" value="0.3671875" />
       </map>
     </option>
