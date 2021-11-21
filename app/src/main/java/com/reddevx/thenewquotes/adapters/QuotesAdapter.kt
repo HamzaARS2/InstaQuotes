@@ -3,28 +3,36 @@ package com.reddevx.thenewquotes.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.reddevx.thenewquotes.R
+import com.reddevx.thenewquotes.models.Quote
 
-class QuotesAdapter(val data:ArrayList<String>) :
+class QuotesAdapter(val data:ArrayList<Quote>) :
     RecyclerView.Adapter<QuotesAdapter.FeaturedQuotesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeaturedQuotesViewHolder = FeaturedQuotesViewHolder(LayoutInflater.from(parent.context).inflate(
         R.layout.latest_quote_item,parent,false))
 
     override fun onBindViewHolder(holder: FeaturedQuotesViewHolder, position: Int) {
-        holder.quote.text = data[position]
+        holder.apply {
+            quote.text = data[position].quoteText
+            Glide.with(holder.itemView).load(data[position].imageUrl).into(quoteImage)
+        }
+
     }
 
     override fun getItemCount(): Int = data.size
 
     class FeaturedQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val quote:TextView
-
+        val quoteImage:ImageView
 
         init {
             quote = itemView.findViewById(R.id.quote_tv)
+            quoteImage = itemView.findViewById(R.id.quote_image)
         }
 
     }

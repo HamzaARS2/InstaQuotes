@@ -16,7 +16,7 @@ import com.reddevx.thenewquotes.models.Quote
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainAdapter(val quoteList:ArrayList<String>,
+class MainAdapter(val quoteList:ArrayList<Quote>,
                   val categoryList:ArrayList<Category>,
                   val recentQuoteList: ArrayList<Quote>,
                   val mContext:Context  ) :

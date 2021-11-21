@@ -4,5 +4,5 @@ data class Quote(
     val imageUrl:String,
     val quoteText:String,
     val category:String,
-    val isFavorite:Boolean
+    val isFavorite:Boolean = false
 )
