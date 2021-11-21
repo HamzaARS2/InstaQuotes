@@ -8,6 +8,10 @@
     app:cardCornerRadius="4dp"
     app:cardElevation="2dp"
     android:layout_marginHorizontal="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+
     >
 <!--    android:layout_marginTop="4dp"-->
 <!--    android:layout_marginBottom="6dp"-->
@@ -36,11 +40,11 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recent_quote_tv"
+            app:layout_constraintTop_toBottomOf="@+id/recent_quote_text_tv"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/recent_quote_tv"
+            android:id="@+id/recent_quote_text_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -72,6 +76,7 @@
             android:background="@drawable/recent_fav_image_btn"
             android:scaleType="centerInside"
             android:padding="6dp"
+
             android:src="@drawable/ic_empty_heart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -100,7 +105,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
             android:background="@color/white"
-            android:src="@drawable/ic_search"
+            android:src="@drawable/ic_share"
+            android:scaleType="centerInside"
+
             app:layout_constraintBottom_toBottomOf="@+id/recent_quote_category_tv"
             app:layout_constraintDimensionRatio=""
             app:layout_constraintEnd_toStartOf="@+id/guideline3"

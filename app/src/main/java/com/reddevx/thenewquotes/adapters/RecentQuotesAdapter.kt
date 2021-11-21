@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -33,11 +34,14 @@ class RecentQuotesAdapter(val recentQuotesList:ArrayList<Quote>, val context:Con
         val recentQuoteImage:ImageView
         val quoteTextTv:TextView
         val quoteCategoryTv:TextView
+        val shareBtn:ImageButton
 
         init {
             recentQuoteImage = itemView.findViewById(R.id.recent_quote_image)
-            quoteTextTv = itemView.findViewById(R.id.recent_quote_tv)
+            quoteTextTv = itemView.findViewById(R.id.recent_quote_text_tv)
             quoteCategoryTv = itemView.findViewById(R.id.recent_quote_category_tv)
+            shareBtn = itemView.findViewById(R.id.recent_quote_share_btn)
+
         }
 
     }

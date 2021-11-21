@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.reddevx.thenewquotes.adapters.CategoryAdapter
+import com.reddevx.thenewquotes.adapters.MainAdapter
 import com.reddevx.thenewquotes.adapters.QuotesAdapter
 import com.reddevx.thenewquotes.adapters.RecentQuotesAdapter
 import com.reddevx.thenewquotes.models.Category
@@ -26,7 +27,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var quotesAdapter: QuotesAdapter
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var recentQuotesAdapter: RecentQuotesAdapter
-    //private lateinit var layoutManager: RecyclerView.LayoutManager
+
+    private lateinit var mainAdapter: MainAdapter
+    private lateinit var mainRecyclerView: RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,29 +39,37 @@ class MainActivity : AppCompatActivity() {
         toolbar.title = ""
         setSupportActionBar(toolbar)
 
-        recyclerView = findViewById(R.id.featured_quotes_rv)
-        quotesAdapter = QuotesAdapter(getQuotes())
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
-            adapter = quotesAdapter
+        mainRecyclerView = findViewById(R.id.main_recycler_view)
+        mainAdapter = MainAdapter(getQuotes(),getCategories(),getRecentQuotes(),this)
+        mainRecyclerView.apply {
+            adapter = mainAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.VERTICAL,false)
         }
 
-        val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(recyclerView)
 
-        categoriesRv = findViewById(R.id.categories_rv)
-        categoryAdapter = CategoryAdapter(getCategories(),this)
-        categoriesRv.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
-            adapter = categoryAdapter
-        }
-
-        recentQuotesRv = findViewById(R.id.recent_quote_rv)
-        recentQuotesAdapter = RecentQuotesAdapter(getRecentQuotes(),this)
-        recentQuotesRv.apply {
-            layoutManager = GridLayoutManager(this@MainActivity,2)
-            adapter = recentQuotesAdapter
-        }
+//        recyclerView = findViewById(R.id.featured_quotes_rv)
+//        quotesAdapter = QuotesAdapter(getQuotes())
+//        recyclerView.apply {
+//            layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
+//            adapter = quotesAdapter
+//        }
+//
+//        val snapHelper = PagerSnapHelper()
+//        snapHelper.attachToRecyclerView(recyclerView)
+//
+//        categoriesRv = findViewById(R.id.categories_rv)
+//        categoryAdapter = CategoryAdapter(getCategories(),this)
+//        categoriesRv.apply {
+//            layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
+//            adapter = categoryAdapter
+//        }
+//
+//        recentQuotesRv = findViewById(R.id.recent_quote_tv)
+//        recentQuotesAdapter = RecentQuotesAdapter(getRecentQuotes(),this)
+//        recentQuotesRv.apply {
+//            layoutManager = GridLayoutManager(this@MainActivity,2)
+//            adapter = recentQuotesAdapter
+//        }
     }
     private fun getQuotes() : ArrayList<String> {
         return arrayListOf("When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune."
