@@ -22,6 +22,7 @@ class QuotesAdapter(val data:ArrayList<String>) :
     class FeaturedQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val quote:TextView
 
+
         init {
             quote = itemView.findViewById(R.id.quote_tv)
         }

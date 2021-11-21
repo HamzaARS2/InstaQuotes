@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.reddevx.thenewquotes.adapters.CategoryAdapter
 import com.reddevx.thenewquotes.adapters.QuotesAdapter
@@ -37,10 +38,12 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.featured_quotes_rv)
         quotesAdapter = QuotesAdapter(getQuotes())
         recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL,false)
+            layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
             adapter = quotesAdapter
-
         }
+
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(recyclerView)
 
         categoriesRv = findViewById(R.id.categories_rv)
         categoryAdapter = CategoryAdapter(getCategories(),this)
