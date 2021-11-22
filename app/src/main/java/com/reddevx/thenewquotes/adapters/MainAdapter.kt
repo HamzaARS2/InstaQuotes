@@ -1,8 +1,6 @@
 package com.reddevx.thenewquotes.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -10,16 +8,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.reddevx.thenewquotes.ui.MainActivity
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
-import java.util.*
 import kotlin.collections.ArrayList
 
 class MainAdapter(val quoteList:ArrayList<Quote>,
                   val categoryList:ArrayList<Category>,
                   val recentQuoteList: ArrayList<Quote>,
-                  val mContext:Context  ) :
+                  val mContext: MainActivity
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val QUOTE_VIEW_TYPE:Int = 0
     private val CATEGORY_VIEW_TYPE:Int = 1
@@ -44,7 +43,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         if (holder is SectionOneViewHolder){
             // section one
             val sectionOneViewHolder:SectionOneViewHolder = holder
-            val quotesAdapter = QuotesAdapter(quoteList)
+            val quotesAdapter = QuotesAdapter(quoteList,mContext)
             sectionOneViewHolder.typeQuotesTv.text = "Featured Quotes"
             sectionOneViewHolder.viewAllTv.text = "VIEW ALL"
             sectionOneViewHolder.childRecyclerView.apply {

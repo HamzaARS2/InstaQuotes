@@ -10,8 +10,9 @@ import com.bumptech.glide.Glide
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Quote
 
-class QuotesAdapter(val data:ArrayList<Quote>) :
+class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:FeaturedQuoteInteraction) :
     RecyclerView.Adapter<QuotesAdapter.FeaturedQuotesViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeaturedQuotesViewHolder = FeaturedQuotesViewHolder(LayoutInflater.from(parent.context).inflate(
         R.layout.latest_quote_item,parent,false))
@@ -26,15 +27,25 @@ class QuotesAdapter(val data:ArrayList<Quote>) :
 
     override fun getItemCount(): Int = data.size
 
-    class FeaturedQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class FeaturedQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener{
         val quote:TextView
         val quoteImage:ImageView
 
         init {
             quote = itemView.findViewById(R.id.quote_tv)
             quoteImage = itemView.findViewById(R.id.quote_image)
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            if (adapterPosition != RecyclerView.NO_POSITION)
+            listener.onFeaturedQuoteClick(data,adapterPosition)
         }
 
     }
+
+     interface FeaturedQuoteInteraction {
+         fun onFeaturedQuoteClick(quotes:ArrayList<Quote>, position: Int)
+     }
 
 }
