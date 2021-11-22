@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="1 / 14"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textColor="#000000"
             android:textStyle="bold"
 
@@ -45,7 +45,8 @@
         android:id="@+id/quote_view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="20dp"
+        android:paddingVertical="20dp"
+        android:paddingHorizontal="33dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

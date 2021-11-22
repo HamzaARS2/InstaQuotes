@@ -30,7 +30,7 @@ class FeaturedQuotesActivity : AppCompatActivity() {
         viewPagerAdapter = QuotesPagerAdapter(quoteList)
 
         val compositePageTransformer = CompositePageTransformer()
-        compositePageTransformer.addTransformer(MarginPageTransformer(40))
+        compositePageTransformer.addTransformer(MarginPageTransformer(70))
 
 
         quoteViewPager.apply {
@@ -42,6 +42,7 @@ class FeaturedQuotesActivity : AppCompatActivity() {
             getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
             setPageTransformer(compositePageTransformer)
             setCurrentItem(currentPosition,false)
+
         }
 
 
