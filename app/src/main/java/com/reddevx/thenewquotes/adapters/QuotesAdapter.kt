@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 
-class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:FeaturedQuoteInteraction) :
+class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:QuoteInteraction) :
     RecyclerView.Adapter<QuotesAdapter.FeaturedQuotesViewHolder>() {
 
 
@@ -39,13 +40,11 @@ class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:Feat
 
         override fun onClick(v: View?) {
             if (adapterPosition != RecyclerView.NO_POSITION)
-            listener.onFeaturedQuoteClick(data,adapterPosition)
+            listener.onQuoteClick(data,adapterPosition)
         }
 
     }
 
-     interface FeaturedQuoteInteraction {
-         fun onFeaturedQuoteClick(quotes:ArrayList<Quote>, position: Int)
-     }
+
 
 }

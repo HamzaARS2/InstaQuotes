@@ -19,7 +19,7 @@ class QuotesPagerAdapter(private val quoteList:ArrayList<Quote> ) :
 
     override fun onBindViewHolder(holder: QuotesPagerViewHolder, position: Int) {
         holder.apply {
-            Glide.with(itemView).load(quoteList[position].imageUrl).into(quoteImg)
+            Glide.with(itemView).load(quoteList[position].imageUrl).into(quoteImg).waitForLayout()
             quoteTextTv.text = quoteList[position].quoteText
         }
     }

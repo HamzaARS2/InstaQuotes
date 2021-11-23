@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Category
+import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 import de.hdodenhof.circleimageview.CircleImageView
 
-class CategoryAdapter(val categoryList:ArrayList<Category>, val context:Context) :
+class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:QuoteInteraction) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -20,21 +21,32 @@ class CategoryAdapter(val categoryList:ArrayList<Category>, val context:Context)
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.apply {
-            Glide.with(context).load(categoryList[position].categoryImage).into(holder.categoryImage)
+            Glide.with(itemView).load(categoryList[position].categoryImage).into(holder.categoryImage)
             categoryName.text = categoryList[position].categoryName
         }
     }
 
     override fun getItemCount(): Int = categoryList.size
 
-    class CategoryViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+    inner class CategoryViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener {
+
+
         val categoryImage:CircleImageView
         val categoryName:TextView
 
         init {
             categoryImage = itemView.findViewById(R.id.categoryImage)
             categoryName = itemView.findViewById(R.id.categoryName)
+            itemView.setOnClickListener(this)
         }
+
+        override fun onClick(v: View?) {
+            if (adapterPosition != RecyclerView.NO_POSITION)
+                listener.onCategoryClick(categoryList[adapterPosition],adapterPosition)
+        }
+
     }
+
+
 
 }

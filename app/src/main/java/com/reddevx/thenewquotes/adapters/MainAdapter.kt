@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 class MainAdapter(val quoteList:ArrayList<Quote>,
                   val categoryList:ArrayList<Category>,
                   val recentQuoteList: ArrayList<Quote>,
-                  val mContext: MainActivity
+                  val mContext: MainActivity,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val QUOTE_VIEW_TYPE:Int = 0
@@ -41,7 +41,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is SectionOneViewHolder){
-            // section one
+            // section one (Featured Quotes)
             val sectionOneViewHolder:SectionOneViewHolder = holder
             val quotesAdapter = QuotesAdapter(quoteList,mContext)
             sectionOneViewHolder.typeQuotesTv.text = "Featured Quotes"
@@ -49,21 +49,23 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
             sectionOneViewHolder.childRecyclerView.apply {
                 adapter = quotesAdapter
                 layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
+                hasFixedSize()
             }
             PagerSnapHelper().attachToRecyclerView(sectionOneViewHolder.childRecyclerView)
 
         }else if (holder is SectionTwoViewHolder){
-            // section two
+            // section two (Categories)
             val sectionTwoViewHolder:SectionTwoViewHolder = holder
             val categoryAdapter = CategoryAdapter(categoryList,mContext)
             sectionTwoViewHolder.childRecyclerView.apply {
                 adapter = categoryAdapter
                 layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
+                hasFixedSize()
             }
 
 
         } else {
-            // section three
+            // section three (Recent Quotes)
             val sectionThreeViewHolder:SectionThreeViewHolder = holder as SectionThreeViewHolder
             val recentQuotesAdapter = RecentQuotesAdapter(recentQuoteList,mContext)
             sectionThreeViewHolder.apply {
@@ -72,9 +74,9 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
                 childRecyclerView.apply {
                     adapter = recentQuotesAdapter
                     layoutManager = GridLayoutManager(mContext,2)
+                    hasFixedSize()
                 }
             }
-            sectionThreeViewHolder.childRecyclerView
 
 
         }
@@ -92,7 +94,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         return RECENT_QUOTE_VIEW_TYPE
     }
 
-    inner class SectionOneViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+    inner class SectionOneViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val typeQuotesTv:TextView
         val viewAllTv:TextView
         val childRecyclerView:RecyclerView
@@ -101,6 +103,12 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
             typeQuotesTv = itemView.findViewById(R.id.featured_quotes_tv)
             viewAllTv = itemView.findViewById(R.id.featured_view_all)
             childRecyclerView = itemView.findViewById(R.id.featured_quotes_rv)
+            viewAllTv.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            if (adapterPosition != RecyclerView.NO_POSITION)
+                mContext.onViewALlTvClick(quoteList,adapterPosition,MainActivity.Constants.FROM_SECTION_ONE)
         }
     }
 
@@ -113,7 +121,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         }
     }
 
-    inner class SectionThreeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class SectionThreeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val recentQuotesTv:TextView
         val recentViewALlTv:TextView
         val childRecyclerView:RecyclerView
@@ -121,8 +129,18 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
             recentQuotesTv = itemView.findViewById(R.id.recent_quotes_tv)
             recentViewALlTv = itemView.findViewById(R.id.recent_view_all)
             childRecyclerView = itemView.findViewById(R.id.recent_quote_rv)
+            recentViewALlTv.setOnClickListener(this)
+
+        }
+
+        override fun onClick(v: View?) {
+            if (adapterPosition != RecyclerView.NO_POSITION){
+                mContext.onViewALlTvClick(recentQuoteList,adapterPosition,MainActivity.Constants.FROM_SECTION_THREE)
+                }
         }
     }
+
+
 
 
 }

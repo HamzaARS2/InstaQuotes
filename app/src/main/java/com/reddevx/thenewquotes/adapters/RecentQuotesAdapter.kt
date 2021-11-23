@@ -1,6 +1,5 @@
 package com.reddevx.thenewquotes.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 
-class RecentQuotesAdapter(val recentQuotesList:ArrayList<Quote>, val context:Context) :
+class RecentQuotesAdapter(private val recentQuotesList:ArrayList<Quote>, private val listener: QuoteInteraction? = null) :
     RecyclerView.Adapter<RecentQuotesAdapter.RecentQuotesViewHolder>() {
 
 
@@ -22,7 +22,7 @@ class RecentQuotesAdapter(val recentQuotesList:ArrayList<Quote>, val context:Con
 
     override fun onBindViewHolder(holder: RecentQuotesViewHolder, position: Int) {
         holder.apply {
-            Glide.with(context).load(recentQuotesList[position].imageUrl).into(recentQuoteImage)
+            Glide.with(itemView).load(recentQuotesList[position].imageUrl).into(recentQuoteImage)
             quoteTextTv.text = recentQuotesList[position].quoteText
             quoteCategoryTv.text = recentQuotesList[position].category
         }
@@ -30,7 +30,7 @@ class RecentQuotesAdapter(val recentQuotesList:ArrayList<Quote>, val context:Con
 
     override fun getItemCount(): Int = recentQuotesList.size
 
-    class RecentQuotesViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+    inner class RecentQuotesViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val recentQuoteImage:ImageView
         val quoteTextTv:TextView
         val quoteCategoryTv:TextView
@@ -41,8 +41,18 @@ class RecentQuotesAdapter(val recentQuotesList:ArrayList<Quote>, val context:Con
             quoteTextTv = itemView.findViewById(R.id.recent_quote_text_tv)
             quoteCategoryTv = itemView.findViewById(R.id.recent_quote_category_tv)
             shareBtn = itemView.findViewById(R.id.recent_quote_share_btn)
+            itemView.setOnClickListener(this)
+
 
         }
 
+        override fun onClick(v: View?) {
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                listener?.onQuoteClick(recentQuotesList, adapterPosition)
+            }
+        }
+
     }
+
+
 }

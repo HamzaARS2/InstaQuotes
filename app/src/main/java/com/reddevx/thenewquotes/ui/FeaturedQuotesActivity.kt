@@ -3,6 +3,7 @@ package com.reddevx.thenewquotes.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.widget.TextView
 import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -16,6 +17,7 @@ class FeaturedQuotesActivity : AppCompatActivity() {
 
     private lateinit var quoteViewPager:ViewPager2
     private lateinit var viewPagerAdapter:QuotesPagerAdapter
+    private lateinit var counterTv:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_featured_quotes)
@@ -23,6 +25,9 @@ class FeaturedQuotesActivity : AppCompatActivity() {
         toolbar.title = ""
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        counterTv = findViewById(R.id.page_menu_counter_tv)
+
+
 
         val quoteList = intent.getParcelableArrayListExtra<Quote>(MainActivity.Constants.QUOTE_LIST_KEY) as ArrayList<Quote>
         val currentPosition = intent.getIntExtra(MainActivity.Constants.QUOTE_POSITION_KEY,-1)
@@ -44,6 +49,15 @@ class FeaturedQuotesActivity : AppCompatActivity() {
             setCurrentItem(currentPosition,false)
 
         }
+        counterTv.text = "${currentPosition+1} / ${quoteList.size}"
+        quoteViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                counterTv.text = "${position+1} / ${quoteList.size}"
+            }
+
+        })
+
 
 
 
@@ -57,3 +71,5 @@ class FeaturedQuotesActivity : AppCompatActivity() {
 
 
 }
+
+

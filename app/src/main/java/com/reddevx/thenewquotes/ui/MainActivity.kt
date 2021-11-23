@@ -5,24 +5,31 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.adapters.CategoryAdapter
 import com.reddevx.thenewquotes.adapters.MainAdapter
 import com.reddevx.thenewquotes.adapters.QuotesAdapter
-import com.reddevx.thenewquotes.adapters.RecentQuotesAdapter
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 
-class MainActivity : AppCompatActivity() ,QuotesAdapter.FeaturedQuoteInteraction {
+class MainActivity : AppCompatActivity() ,QuoteInteraction {
 
     object Constants {
         const val QUOTE_LIST_KEY:String = "quote_list"
         const val QUOTE_POSITION_KEY = "quote_position"
+        const val CATEGORY_POSITION_KEY = "category_position"
+        const val CATEGORY_KEY = "category_quotes_key"
+        const val QUOTES_TYPE_KEY = " which_list_will_display"
+
+        const val FROM_SECTION_ONE = "1"
+        const val FROM_SECTION_TWO = "2"
+        const val FROM_SECTION_THREE = "3"
     }
 
     private lateinit var mainAdapter: MainAdapter
@@ -51,34 +58,9 @@ class MainActivity : AppCompatActivity() ,QuotesAdapter.FeaturedQuoteInteraction
         mainRecyclerView.apply {
             adapter = mainAdapter
             layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.VERTICAL,false)
+            hasFixedSize()
         }
 
-
-
-
-//        recyclerView = findViewById(R.id.featured_quotes_rv)
-//        quotesAdapter = QuotesAdapter(getQuotes())
-//        recyclerView.apply {
-//            layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
-//            adapter = quotesAdapter
-//        }
-//
-//        val snapHelper = PagerSnapHelper()
-//        snapHelper.attachToRecyclerView(recyclerView)
-//
-//        categoriesRv = findViewById(R.id.categories_rv)
-//        categoryAdapter = CategoryAdapter(getCategories(),this)
-//        categoriesRv.apply {
-//            layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
-//            adapter = categoryAdapter
-//        }
-//
-//        recentQuotesRv = findViewById(R.id.recent_quote_tv)
-//        recentQuotesAdapter = RecentQuotesAdapter(getRecentQuotes(),this)
-//        recentQuotesRv.apply {
-//            layoutManager = GridLayoutManager(this@MainActivity,2)
-//            adapter = recentQuotesAdapter
-//        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -101,13 +83,13 @@ class MainActivity : AppCompatActivity() ,QuotesAdapter.FeaturedQuoteInteraction
 
     private fun getCategories() : ArrayList<Category> {
         return arrayListOf(
-            Category(R.drawable.age_circle,"Age"),
-            Category(R.drawable.alone_circle,"Alone"),
-            Category(R.drawable.angry_circle,"Angry"),
-            Category(R.drawable.family_circle,"Family"),
-            Category(R.drawable.friendship_circle,"Friendship"),
-            Category(R.drawable.funny_circle,"Funny"),
-            Category(R.drawable.life_circle,"Life")
+            Category(R.drawable.age_circle,"Age",getQuotes()),
+            Category(R.drawable.alone_circle,"Alone",getQuotes()),
+            Category(R.drawable.angry_circle,"Angry",getQuotes()),
+            Category(R.drawable.family_circle,"Family",getQuotes()),
+            Category(R.drawable.friendship_circle,"Friendship",getQuotes()),
+            Category(R.drawable.funny_circle,"Funny",getQuotes()),
+            Category(R.drawable.life_circle,"Life",getQuotes())
         )
     }
 
@@ -129,7 +111,7 @@ class MainActivity : AppCompatActivity() ,QuotesAdapter.FeaturedQuoteInteraction
         return true
     }
 
-    override fun onFeaturedQuoteClick(quotes: ArrayList<Quote>, position: Int) {
+    override fun onQuoteClick(quotes: ArrayList<Quote>, position: Int) {
         val intent = Intent(this,FeaturedQuotesActivity::class.java)
         intent.apply {
             putParcelableArrayListExtra(Constants.QUOTE_LIST_KEY,quotes)
@@ -137,6 +119,22 @@ class MainActivity : AppCompatActivity() ,QuotesAdapter.FeaturedQuoteInteraction
         }
         startActivity(intent)
     }
+
+    override fun onCategoryClick(category: Category, position: Int) {
+        val intent = Intent(this,CategoryQuotesActivity::class.java)
+        intent.putExtra(Constants.CATEGORY_KEY,category)
+        intent.putExtra(Constants.QUOTES_TYPE_KEY,Constants.FROM_SECTION_TWO)
+        startActivity(intent)
+    }
+
+    override fun onViewALlTvClick(quotes: ArrayList<Quote>, position: Int, sectionKey:String) {
+        val intent = Intent(this,CategoryQuotesActivity::class.java)
+        intent.putParcelableArrayListExtra(Constants.QUOTE_LIST_KEY,quotes)
+        intent.putExtra(Constants.QUOTES_TYPE_KEY,sectionKey)
+        startActivity(intent)
+    }
+
+
 
 
 }
