@@ -1,5 +1,6 @@
 package com.reddevx.thenewquotes.models
 
+import android.graphics.Bitmap
 import android.os.Parcelable
 import android.view.View
 import kotlinx.parcelize.Parcelize

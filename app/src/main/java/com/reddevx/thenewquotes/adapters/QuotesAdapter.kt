@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
@@ -20,9 +21,16 @@ class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:Quot
 
     override fun onBindViewHolder(holder: FeaturedQuotesViewHolder, position: Int) {
         holder.apply {
+
             quote.text = data[position].quoteText
-            Glide.with(holder.itemView).load(data[position].imageUrl).into(quoteImage)
-        }
+
+                Glide.with(holder.itemView)
+                    .load(
+                        data[position]
+                            .imageUrl
+                    ).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).into(quoteImage)
+            }
+
 
     }
 

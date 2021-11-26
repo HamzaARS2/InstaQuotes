@@ -24,6 +24,11 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
     private val CATEGORY_VIEW_TYPE:Int = 1
     private val RECENT_QUOTE_VIEW_TYPE:Int = 2
 
+    private lateinit var quotesAdapter:QuotesAdapter
+    private lateinit var categoryAdapter:CategoryAdapter
+    private lateinit var recentQuotesAdapter:RecentQuotesAdapter
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view:View
@@ -43,7 +48,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         if (holder is SectionOneViewHolder){
             // section one (Featured Quotes)
             val sectionOneViewHolder:SectionOneViewHolder = holder
-            val quotesAdapter = QuotesAdapter(quoteList,mContext)
+            quotesAdapter = QuotesAdapter(quoteList,mContext)
             sectionOneViewHolder.typeQuotesTv.text = "Featured Quotes"
             sectionOneViewHolder.viewAllTv.text = "VIEW ALL"
             sectionOneViewHolder.childRecyclerView.apply {
@@ -56,7 +61,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         }else if (holder is SectionTwoViewHolder){
             // section two (Categories)
             val sectionTwoViewHolder:SectionTwoViewHolder = holder
-            val categoryAdapter = CategoryAdapter(categoryList,mContext)
+            categoryAdapter = CategoryAdapter(categoryList,mContext)
             sectionTwoViewHolder.childRecyclerView.apply {
                 adapter = categoryAdapter
                 layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
@@ -67,7 +72,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         } else {
             // section three (Recent Quotes)
             val sectionThreeViewHolder:SectionThreeViewHolder = holder as SectionThreeViewHolder
-            val recentQuotesAdapter = RecentQuotesAdapter(recentQuoteList,mContext)
+            recentQuotesAdapter = RecentQuotesAdapter(recentQuoteList,mContext)
             sectionThreeViewHolder.apply {
                 recentQuotesTv.text = "Recent Quotes"
                 recentViewALlTv.text = "VIEW ALL"
@@ -81,6 +86,11 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
 
         }
 
+    }
+
+     fun refreshData(){
+        quotesAdapter.notifyDataSetChanged()
+        recentQuotesAdapter.notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = 3
@@ -108,7 +118,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
 
         override fun onClick(v: View?) {
             if (adapterPosition != RecyclerView.NO_POSITION)
-                mContext.onViewALlTvClick(quoteList,adapterPosition,MainActivity.Constants.FROM_SECTION_ONE)
+                mContext.onViewAllTvClick(quoteList,adapterPosition,MainActivity.Constants.FROM_SECTION_ONE)
         }
     }
 
@@ -135,7 +145,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
 
         override fun onClick(v: View?) {
             if (adapterPosition != RecyclerView.NO_POSITION){
-                mContext.onViewALlTvClick(recentQuoteList,adapterPosition,MainActivity.Constants.FROM_SECTION_THREE)
+                mContext.onViewAllTvClick(recentQuoteList,adapterPosition,MainActivity.Constants.FROM_SECTION_THREE)
                 }
         }
     }

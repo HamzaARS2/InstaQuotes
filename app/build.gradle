@@ -48,4 +48,19 @@ dependencies {
     // Glide Library
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    def work_version = "2.5.0"
+
+
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
+
+    // Coil
+    implementation("io.coil-kt:coil:1.4.0")
+
+    // LifeCycleScope
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")
+
 }

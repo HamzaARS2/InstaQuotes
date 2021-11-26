@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
@@ -21,7 +22,8 @@ class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.apply {
-            Glide.with(itemView).load(categoryList[position].categoryImage).into(holder.categoryImage)
+            Glide.with(itemView).load(categoryList[position].categoryImage).diskCacheStrategy(
+                DiskCacheStrategy.AUTOMATIC).into(holder.categoryImage)
             categoryName.text = categoryList[position].categoryName
         }
     }

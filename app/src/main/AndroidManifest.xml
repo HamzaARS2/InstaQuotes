@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TheNewQuotes">
         <activity
+            android:name=".ui.NotificationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.CategoryQuotesActivity"
             android:exported="false" />
         <activity

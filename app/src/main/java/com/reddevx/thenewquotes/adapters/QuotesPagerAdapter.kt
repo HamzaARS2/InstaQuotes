@@ -1,5 +1,6 @@
 package com.reddevx.thenewquotes.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,10 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Quote
 
-class QuotesPagerAdapter(private val quoteList:ArrayList<Quote> ) :
+class QuotesPagerAdapter(private val quoteList:ArrayList<Quote>,val context: Context) :
     RecyclerView.Adapter<QuotesPagerAdapter.QuotesPagerViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuotesPagerViewHolder {
@@ -19,9 +21,18 @@ class QuotesPagerAdapter(private val quoteList:ArrayList<Quote> ) :
 
     override fun onBindViewHolder(holder: QuotesPagerViewHolder, position: Int) {
         holder.apply {
-            Glide.with(itemView).load(quoteList[position].imageUrl).into(quoteImg).waitForLayout()
+
+            Glide.with(itemView)
+                .asBitmap()
+                .load(quoteList[position].imageUrl)
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .into(quoteImg)
             quoteTextTv.text = quoteList[position].quoteText
-        }
+
+            }
+
+
     }
 
     override fun getItemCount(): Int = quoteList.size
@@ -36,6 +47,8 @@ class QuotesPagerAdapter(private val quoteList:ArrayList<Quote> ) :
         }
 
     }
+
+
 
 
 }

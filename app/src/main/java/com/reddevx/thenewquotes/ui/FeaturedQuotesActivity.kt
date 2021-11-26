@@ -1,8 +1,10 @@
 package com.reddevx.thenewquotes.ui
 
+import android.graphics.PixelFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
@@ -27,12 +29,14 @@ class FeaturedQuotesActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         counterTv = findViewById(R.id.page_menu_counter_tv)
 
+        window.setFormat(PixelFormat.RGBA_8888)
+
 
 
         val quoteList = intent.getParcelableArrayListExtra<Quote>(MainActivity.Constants.QUOTE_LIST_KEY) as ArrayList<Quote>
         val currentPosition = intent.getIntExtra(MainActivity.Constants.QUOTE_POSITION_KEY,-1)
         quoteViewPager = findViewById(R.id.quote_view_pager)
-        viewPagerAdapter = QuotesPagerAdapter(quoteList)
+        viewPagerAdapter = QuotesPagerAdapter(quoteList,this)
 
         val compositePageTransformer = CompositePageTransformer()
         compositePageTransformer.addTransformer(MarginPageTransformer(70))
@@ -68,6 +72,16 @@ class FeaturedQuotesActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.quote_page_menu,menu)
         return super.onCreateOptionsMenu(menu)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return true
+    }
+
+
 
 
 }
