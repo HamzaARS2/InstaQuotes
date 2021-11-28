@@ -1,13 +1,12 @@
 package com.reddevx.thenewquotes.adapters
 
-import android.util.Log
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -15,7 +14,12 @@ import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 
-class RecentQuotesAdapter(private var recentQuotesList:ArrayList<Quote> = arrayListOf(), private val listener: QuoteInteraction? = null,private val isFavorties:Boolean = false) :
+class RecentQuotesAdapter(
+    private var recentQuotesList: ArrayList<Quote> = arrayListOf(),
+    private val listener: QuoteInteraction? = null,
+    private val isFavorties: Boolean = false,
+    private val context: Context
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val FAVORITES = 0
@@ -25,7 +29,8 @@ class RecentQuotesAdapter(private var recentQuotesList:ArrayList<Quote> = arrayL
         if (viewType == FAVORITES) {
             return FavoriteQuotesViewHolder(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.favorite_quote_item,parent,false))
+                    .inflate(R.layout.favorite_quote_item, parent, false)
+            )
         }
 
         return RecentQuotesViewHolder(
@@ -60,36 +65,79 @@ class RecentQuotesAdapter(private var recentQuotesList:ArrayList<Quote> = arrayL
 
     override fun getItemCount(): Int = recentQuotesList.size
 
-    inner class RecentQuotesViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val recentQuoteImage:ImageView
-        val quoteTextTv:TextView
-        val quoteCategoryTv:TextView
-        val shareBtn:ImageButton
+    fun addQuote(quote:Quote){
+        recentQuotesList.add(quote)
+        notifyItemInserted(recentQuotesList.size -1)
+    }
+
+    inner class RecentQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+        val recentQuoteImage: ImageView
+        val quoteTextTv: TextView
+        val quoteCategoryTv: TextView
+        val shareBtn: ImageButton
+        val recentHeartBox: CheckBox
 
         init {
             recentQuoteImage = itemView.findViewById(R.id.recent_quote_image)
             quoteTextTv = itemView.findViewById(R.id.recent_quote_text_tv)
             quoteCategoryTv = itemView.findViewById(R.id.recent_quote_category_tv)
             shareBtn = itemView.findViewById(R.id.recent_quote_share_btn)
+            recentHeartBox = itemView.findViewById(R.id.recent_heart_img_btn)
             itemView.setOnClickListener(this)
+            recentHeartBox.setOnClickListener(this)
+            shareBtn.setOnClickListener(this)
 
 
         }
 
         override fun onClick(v: View?) {
+            when (v) {
+                itemView -> {
+                    if (adapterPosition != RecyclerView.NO_POSITION)
+                        listener?.onQuoteClick(recentQuotesList, adapterPosition)
+                }
+                recentHeartBox -> {
+                    if (recentHeartBox.isChecked)
+                        Toast.makeText(
+                            context,
+                            "This quote is added to Favorite list!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    else
+                        Toast.makeText(
+                            context,
+                            "This quote is removed from Favorite list!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                }
+                shareBtn -> {
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        val intent = Intent(Intent.ACTION_SEND)
+                        intent.apply {
+                            type = "text/plain"
+                            val quoteToShare = recentQuotesList[adapterPosition].quoteText
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                "${quoteToShare} \n https://play.google.com/store/apps/details?id=com.rm.instaquotes"
+                            )
+                        }
+                        startActivity(context,Intent.createChooser(intent,"Install App!"),null)
+                    }
 
-            if (adapterPosition != RecyclerView.NO_POSITION) {
-                listener?.onQuoteClick(recentQuotesList, adapterPosition)
+                }
             }
+
         }
 
     }
 
-    inner class FavoriteQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val favortieQuoteImage:ImageView
-        val favortieQuoteTv:TextView
-        val favortieQuoteCategoryTv:TextView
-        val favortieShareBtn:ImageButton
+    inner class FavoriteQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+        val favortieQuoteImage: ImageView
+        val favortieQuoteTv: TextView
+        val favortieQuoteCategoryTv: TextView
+        val favortieShareBtn: ImageButton
 
         init {
             favortieQuoteImage = itemView.findViewById(R.id.favorite_quote_img)
@@ -102,11 +150,11 @@ class RecentQuotesAdapter(private var recentQuotesList:ArrayList<Quote> = arrayL
         override fun onClick(v: View?) {
 
             if (adapterPosition != RecyclerView.NO_POSITION)
-                listener?.onQuoteClick(recentQuotesList,adapterPosition)
+                listener?.onQuoteClick(recentQuotesList, adapterPosition)
         }
     }
 
-     fun setData(quotes:ArrayList<Quote>) {
+    fun setData(quotes: ArrayList<Quote>) {
         recentQuotesList.clear()
         recentQuotesList = quotes
     }

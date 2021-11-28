@@ -22,8 +22,8 @@ class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.apply {
-            Glide.with(itemView).load(categoryList[position].categoryImage).diskCacheStrategy(
-                DiskCacheStrategy.AUTOMATIC).into(holder.categoryImage)
+            Glide.with(itemView).load(categoryList[position].categoryImage)
+                .into(holder.categoryImage)
             categoryName.text = categoryList[position].categoryName
         }
     }
@@ -43,8 +43,8 @@ class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:
         }
 
         override fun onClick(v: View?) {
-            if (adapterPosition != RecyclerView.NO_POSITION)
-                listener.onCategoryClick(categoryList[adapterPosition],adapterPosition)
+            if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+                listener.onCategoryClick(categoryList[bindingAdapterPosition],bindingAdapterPosition)
         }
 
     }

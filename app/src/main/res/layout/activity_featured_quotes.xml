@@ -28,18 +28,29 @@
             android:textSize="20sp"
             tools:layout_editor_absoluteX="157dp"
             tools:layout_editor_absoluteY="18dp" />
+
         <TextView
             android:id="@+id/page_menu_counter_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="center"
             android:text="1 / 14"
             android:textSize="18sp"
             android:textColor="#000000"
             android:textStyle="bold"
-
-
             />
+
+        <CheckBox
+            android:id="@+id/page_favorite_item"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:paddingRight="2dp"
+            android:button="@drawable/featured_favorite_box_selector"
+            android:checked="false"
+            app:useMaterialThemeColors="false"
+            />
+
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.viewpager2.widget.ViewPager2

@@ -12,7 +12,7 @@ import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 
-class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:QuoteInteraction) :
+class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:QuoteInteraction? = null) :
     RecyclerView.Adapter<QuotesAdapter.FeaturedQuotesViewHolder>() {
 
 
@@ -25,16 +25,19 @@ class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:Quot
             quote.text = data[position].quoteText
 
                 Glide.with(holder.itemView)
-                    .load(
-                        data[position]
-                            .imageUrl
-                    ).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).into(quoteImage)
+                    .load(data[position].imageUrl)
+                    .into(quoteImage)
             }
 
 
     }
 
     override fun getItemCount(): Int = data.size
+
+    fun addQuote(quote: Quote){
+        data.add(quote)
+        notifyItemInserted(data.size -1)
+    }
 
     inner class FeaturedQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener{
         val quote:TextView
@@ -47,8 +50,8 @@ class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:Quot
         }
 
         override fun onClick(v: View?) {
-            if (adapterPosition != RecyclerView.NO_POSITION)
-            listener.onQuoteClick(data,adapterPosition)
+            if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+            listener?.onQuoteClick(data,bindingAdapterPosition)
         }
 
     }

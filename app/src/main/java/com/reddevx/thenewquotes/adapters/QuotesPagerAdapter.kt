@@ -23,10 +23,8 @@ class QuotesPagerAdapter(private val quoteList:ArrayList<Quote>,val context: Con
         holder.apply {
 
             Glide.with(itemView)
-                .asBitmap()
                 .load(quoteList[position].imageUrl)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(quoteImg)
             quoteTextTv.text = quoteList[position].quoteText
 
@@ -47,6 +45,7 @@ class QuotesPagerAdapter(private val quoteList:ArrayList<Quote>,val context: Con
         }
 
     }
+
 
 
 

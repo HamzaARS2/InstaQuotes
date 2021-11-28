@@ -4,22 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.NotificationsActivity">
-
-
-
+    tools:context=".ui.SearchActivity"
+    android:background="#f8f9fa"
+    >
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/notifications_toolbar"
+        android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:background="#FFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notifications"
+            android:text="Search"
             android:textSize="18sp"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -27,24 +27,24 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notificationsRv"
+        android:id="@+id/searchRv"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notifications_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
 
     <LinearLayout
-        android:id="@+id/nodata_LL"
+        android:id="@+id/search_noData_LL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notifications_toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/search_toolbar">
 
         <ImageView
             android:layout_width="60dp"

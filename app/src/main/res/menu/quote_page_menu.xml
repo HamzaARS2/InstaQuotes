@@ -2,22 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/page_menu_item_1"
-        android:title="Read Article"
-        app:showAsAction="never"/>
+<!--    <item android:id="@+id/page_menu_item_1"-->
+<!--        android:title="Read Article"-->
+<!--        app:showAsAction="never"/>-->
 
-    <item android:id="@+id/page_menu_item_2"
-        android:title="Download Image"
-        app:showAsAction="never"/>
 
-    <item android:id="@+id/page_menu_item_3"
-        android:title="Set as Wallpaper"
-        app:showAsAction="never"/>
 
-    <item android:id="@+id/page_menu_item_favorite"
-        android:title="Favorite"
-        android:icon="@drawable/ic_full_heart_black"
-        app:showAsAction="always"/>
+<!--    <item android:id="@+id/page_menu_item_3"-->
+<!--        android:title="Set as Wallpaper"-->
+<!--        app:showAsAction="never"/>-->
 
     <item android:id="@+id/page_menu_item_copy"
         android:title="Copy content"
@@ -29,4 +22,8 @@
         android:icon="@drawable/baseline_share_black_24dp"
         app:showAsAction="always"/>
 
+    <item android:id="@+id/page_menu_download_item"
+        android:title="Download Image"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_download" />
 </menu>

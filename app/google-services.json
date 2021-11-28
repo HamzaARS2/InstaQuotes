@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "42665171519",
+    "project_id": "thenewquote-28a9a",
+    "storage_bucket": "thenewquote-28a9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42665171519:android:1371c0d208d7a329cb768a",
+        "android_client_info": {
+          "package_name": "com.reddevx.thenewquotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42665171519-h7hg166p4h0q8cc14lk1ej5qua9lls3l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRNwIMbCfZMiUMf0y64Vm_IsmHjJTZoZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42665171519-h7hg166p4h0q8cc14lk1ej5qua9lls3l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

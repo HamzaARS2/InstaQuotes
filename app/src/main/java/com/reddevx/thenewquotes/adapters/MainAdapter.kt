@@ -1,5 +1,6 @@
 package com.reddevx.thenewquotes.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,25 +9,36 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.reddevx.thenewquotes.ui.MainActivity
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
+import java.lang.Exception
+
 import kotlin.collections.ArrayList
 
-class MainAdapter(val quoteList:ArrayList<Quote>,
-                  val categoryList:ArrayList<Category>,
-                  val recentQuoteList: ArrayList<Quote>,
-                  val mContext: MainActivity,
+class MainAdapter(
+    val categoryList:ArrayList<Category>,
+    val mContext: MainActivity,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val QUOTE_VIEW_TYPE:Int = 0
     private val CATEGORY_VIEW_TYPE:Int = 1
     private val RECENT_QUOTE_VIEW_TYPE:Int = 2
 
+    private val quotes = ArrayList<Quote>()
+    private val recentQuotes = ArrayList<Quote>()
+
     private lateinit var quotesAdapter:QuotesAdapter
     private lateinit var categoryAdapter:CategoryAdapter
     private lateinit var recentQuotesAdapter:RecentQuotesAdapter
+    private val fireStore = FirebaseFirestore.getInstance()
+
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -47,8 +59,10 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is SectionOneViewHolder){
             // section one (Featured Quotes)
+
+
             val sectionOneViewHolder:SectionOneViewHolder = holder
-            quotesAdapter = QuotesAdapter(quoteList,mContext)
+            quotesAdapter = QuotesAdapter(quotes,mContext)
             sectionOneViewHolder.typeQuotesTv.text = "Featured Quotes"
             sectionOneViewHolder.viewAllTv.text = "VIEW ALL"
             sectionOneViewHolder.childRecyclerView.apply {
@@ -56,6 +70,10 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
                 layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
                 hasFixedSize()
             }
+            loadFeaturedQuotes()
+
+
+
             PagerSnapHelper().attachToRecyclerView(sectionOneViewHolder.childRecyclerView)
 
         }else if (holder is SectionTwoViewHolder){
@@ -72,7 +90,7 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         } else {
             // section three (Recent Quotes)
             val sectionThreeViewHolder:SectionThreeViewHolder = holder as SectionThreeViewHolder
-            recentQuotesAdapter = RecentQuotesAdapter(recentQuoteList,mContext)
+            recentQuotesAdapter = RecentQuotesAdapter(recentQuotes,mContext,context = mContext)
             sectionThreeViewHolder.apply {
                 recentQuotesTv.text = "Recent Quotes"
                 recentViewALlTv.text = "VIEW ALL"
@@ -83,15 +101,59 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
                 }
             }
 
+            loadRecentQuotes()
+
 
         }
 
     }
 
-     fun refreshData(){
-        quotesAdapter.notifyDataSetChanged()
-        recentQuotesAdapter.notifyDataSetChanged()
+    private fun loadFeaturedQuotes(){
+        val mFeaturedColl = fireStore.collection("quotes")
+        mFeaturedColl
+            .limit(14)
+            .get()
+            .addOnSuccessListener(mContext, object : OnSuccessListener<QuerySnapshot> {
+                override fun onSuccess(snapShot: QuerySnapshot?) {
+                    for (doc in snapShot!!.documents){
+                        val imageUrl = doc.getString(MainActivity.Constants.FIRE_STORE_IMAGE_KEY)!!
+                        val quoteText = doc.getString(MainActivity.Constants.FIRE_STORE_QUOTE_KEY)!!
+                        val category = doc.getString(MainActivity.Constants.FIRE_STORE_CATEGORY_KEY)!!
+                        val quote = Quote(imageUrl,quoteText,category)
+                        quotes.add(quote)
+                        quotesAdapter.notifyItemInserted(quotes.size-1)
+                    }
+                }
+            })
+            .addOnFailureListener(mContext, object : OnFailureListener {
+                override fun onFailure(e: Exception) {
+                    Log.e("GGGGGGG", "onFailure: $e", )
+                }
+
+            })
     }
+
+
+    private fun loadRecentQuotes(){
+        val mRecentColl = fireStore.collection("recent")
+        mRecentColl.limit(10).addSnapshotListener(mContext, object : EventListener<QuerySnapshot> {
+            override fun onEvent(snapShot: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                if (error != null){
+                    Log.w("Listen failed",error.toString())
+                    return
+                }
+                for (doc in snapShot!!.documents){
+                    val imageUrl = doc.getString(MainActivity.Constants.FIRE_STORE_IMAGE_KEY)!!
+                    val quoteText = doc.getString(MainActivity.Constants.FIRE_STORE_QUOTE_KEY)!!
+                    val category = doc.getString(MainActivity.Constants.FIRE_STORE_CATEGORY_KEY)!!
+                    val quote = Quote(imageUrl,quoteText,category)
+                    recentQuotes.add(quote)
+                    recentQuotesAdapter.notifyItemInserted(recentQuotes.size - 1)
+                }
+            }
+        })
+    }
+
 
     override fun getItemCount(): Int = 3
 
@@ -117,8 +179,8 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         }
 
         override fun onClick(v: View?) {
-            if (adapterPosition != RecyclerView.NO_POSITION)
-                mContext.onViewAllTvClick(quoteList,adapterPosition,MainActivity.Constants.FROM_SECTION_ONE)
+            if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+                mContext.onViewAllTvClick(quotes,bindingAdapterPosition,MainActivity.Constants.FROM_SECTION_ONE)
         }
     }
 
@@ -144,8 +206,8 @@ class MainAdapter(val quoteList:ArrayList<Quote>,
         }
 
         override fun onClick(v: View?) {
-            if (adapterPosition != RecyclerView.NO_POSITION){
-                mContext.onViewAllTvClick(recentQuoteList,adapterPosition,MainActivity.Constants.FROM_SECTION_THREE)
+            if (bindingAdapterPosition != RecyclerView.NO_POSITION){
+                mContext.onViewAllTvClick(recentQuotes,bindingAdapterPosition,MainActivity.Constants.FROM_SECTION_THREE)
                 }
         }
     }
