@@ -111,6 +111,7 @@ class MainAdapter(
     private fun loadFeaturedQuotes(){
         val mFeaturedColl = fireStore.collection("quotes")
         mFeaturedColl
+            .orderBy("date",Query.Direction.DESCENDING)
             .limit(14)
             .get()
             .addOnSuccessListener(mContext, object : OnSuccessListener<QuerySnapshot> {
@@ -136,7 +137,10 @@ class MainAdapter(
 
     private fun loadRecentQuotes(){
         val mRecentColl = fireStore.collection("recent")
-        mRecentColl.limit(10).addSnapshotListener(mContext, object : EventListener<QuerySnapshot> {
+        mRecentColl
+            .orderBy("date",Query.Direction.DESCENDING)
+            .limit(10)
+            .addSnapshotListener(mContext, object : EventListener<QuerySnapshot> {
             override fun onEvent(snapShot: QuerySnapshot?, error: FirebaseFirestoreException?) {
                 if (error != null){
                     Log.w("Listen failed",error.toString())

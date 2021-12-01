@@ -1,13 +1,17 @@
 package com.reddevx.thenewquotes.ui
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,6 +61,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     private lateinit var navigationView: NavigationView
 
     private lateinit var refreshLayout: SwipeRefreshLayout
+    private var doubleBackPressToExit = true
 
 
 
@@ -96,6 +101,18 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         }
 
 
+    }
+
+    override fun onBackPressed() {
+        if (!doubleBackPressToExit){
+            super.onBackPressed()
+            finishAffinity()
+            return
+        }
+
+        doubleBackPressToExit = false
+        Toast.makeText(this, "Tap again to exit", Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackPressToExit = true }, 2000)
     }
 
 
@@ -301,10 +318,32 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
 
             }
+            R.id.nav_exit_menu_item -> showDialog()
 
         }
 
         return true
+    }
+
+    private fun showDialog(){
+        val dialog: AlertDialog
+
+        val dialogInterface = DialogInterface.OnClickListener { dialog, which ->
+            when(which){
+                DialogInterface.BUTTON_POSITIVE -> finishAffinity()
+                DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
+            }
+        }
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Exit")
+            .setMessage("Are you sure you want to close the app?")
+            .apply {
+                setPositiveButton("YES",dialogInterface)
+                setNegativeButton("NO",dialogInterface)
+            }
+        dialog = builder.create()
+        dialog.show()
+
     }
 
     override fun onRefresh() {

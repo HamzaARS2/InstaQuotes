@@ -14,7 +14,7 @@ import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 
-class RecentQuotesAdapter(
+open class RecentQuotesAdapter(
     private var recentQuotesList: ArrayList<Quote> = arrayListOf(),
     private val listener: QuoteInteraction? = null,
     private val isFavorties: Boolean = false,
@@ -65,10 +65,7 @@ class RecentQuotesAdapter(
 
     override fun getItemCount(): Int = recentQuotesList.size
 
-    fun addQuote(quote:Quote){
-        recentQuotesList.add(quote)
-        notifyItemInserted(recentQuotesList.size -1)
-    }
+
 
     inner class RecentQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
@@ -94,8 +91,8 @@ class RecentQuotesAdapter(
         override fun onClick(v: View?) {
             when (v) {
                 itemView -> {
-                    if (adapterPosition != RecyclerView.NO_POSITION)
-                        listener?.onQuoteClick(recentQuotesList, adapterPosition)
+                    if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+                        listener?.onQuoteClick(recentQuotesList, bindingAdapterPosition)
                 }
                 recentHeartBox -> {
                     if (recentHeartBox.isChecked)
@@ -112,11 +109,11 @@ class RecentQuotesAdapter(
                         ).show()
                 }
                 shareBtn -> {
-                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                    if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
                         val intent = Intent(Intent.ACTION_SEND)
                         intent.apply {
                             type = "text/plain"
-                            val quoteToShare = recentQuotesList[adapterPosition].quoteText
+                            val quoteToShare = recentQuotesList[bindingAdapterPosition].quoteText
                             putExtra(
                                 Intent.EXTRA_TEXT,
                                 "${quoteToShare} \n https://play.google.com/store/apps/details?id=com.rm.instaquotes"
@@ -149,15 +146,12 @@ class RecentQuotesAdapter(
 
         override fun onClick(v: View?) {
 
-            if (adapterPosition != RecyclerView.NO_POSITION)
-                listener?.onQuoteClick(recentQuotesList, adapterPosition)
+            if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+                listener?.onQuoteClick(recentQuotesList, bindingAdapterPosition)
         }
     }
 
-    fun setData(quotes: ArrayList<Quote>) {
-        recentQuotesList.clear()
-        recentQuotesList = quotes
-    }
+
 
     override fun getItemViewType(position: Int): Int {
         return if (isFavorties)

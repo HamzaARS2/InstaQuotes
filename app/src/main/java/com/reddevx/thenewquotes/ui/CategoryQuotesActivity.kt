@@ -118,7 +118,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
     private fun prepareFeaturedQuotes(intent:Intent) : Boolean {
         if (intent.getStringExtra(MainActivity.Constants.QUOTES_TYPE_KEY).equals(MainActivity.Constants.FROM_SECTION_ONE)) {
             val quoteList:ArrayList<Quote> = intent.getParcelableArrayListExtra(MainActivity.Constants.QUOTE_LIST_KEY)!!
-            quotesAdapter.setData(quoteList)
+            //quotesAdapter.setData(quoteList)
             toolbarTv.text = "Featured Quotes"
             toolbarDelBtn.visibility = View.GONE
             buildRecyclerView(LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false))
@@ -133,7 +133,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
     private fun prepareRecentQuotes(intent: Intent) : Boolean {
         if (intent.getStringExtra(MainActivity.Constants.QUOTES_TYPE_KEY).equals(MainActivity.Constants.FROM_SECTION_THREE)){
             val recentQuotes:ArrayList<Quote> = intent.getParcelableArrayListExtra(MainActivity.Constants.QUOTE_LIST_KEY)!!
-            quotesAdapter.setData(recentQuotes)
+            //quotesAdapter.setData(recentQuotes)
             toolbarTv.text = "Recent Quotes"
             toolbarDelBtn.visibility = View.GONE
             buildRecyclerView(StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL))
