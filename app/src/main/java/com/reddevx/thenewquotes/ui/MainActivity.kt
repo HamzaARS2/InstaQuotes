@@ -24,6 +24,7 @@ import com.google.firebase.firestore.*
 import com.reddevx.thenewquotes.QuoteLoader
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.adapters.MainAdapter
+import com.reddevx.thenewquotes.database.DatabaseManager
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
     private lateinit var refreshLayout: SwipeRefreshLayout
     private var doubleBackPressToExit = true
+    private lateinit var dbManager:DatabaseManager
 
 
 
@@ -78,7 +80,10 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         navigationView = findViewById(R.id.navigation_view)
         refreshLayout = findViewById(R.id.swipe_refresh_layout)
         mainRecyclerView = findViewById(R.id.main_recycler_view)
-
+        dbManager = DatabaseManager.invoke(this)!!
+        dbManager.open()
+        Toast.makeText(this, dbManager.getUserFavorites()[0].quoteText, Toast.LENGTH_SHORT).show()
+        dbManager.close()
 
         navigationView.setNavigationItemSelectedListener(this)
         refreshLayout.setOnRefreshListener(this)
@@ -262,13 +267,12 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
     override fun onCategoryClick(category: Category, position: Int) {
         val intent = Intent(this, CategoryQuotesActivity::class.java)
-        intent.putExtra(Constants.CATEGORY_KEY, category)
+        intent.putExtra(Constants.CATEGORY_KEY, category.categoryName)
         intent.putExtra(Constants.QUOTES_TYPE_KEY, Constants.FROM_SECTION_TWO)
         startActivity(intent)
     }
 
     override fun onViewAllTvClick(quotes: ArrayList<Quote>, position: Int, sectionKey: String) {
-        Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, CategoryQuotesActivity::class.java)
         intent.putParcelableArrayListExtra(Constants.QUOTE_LIST_KEY, quotes)
         intent.putExtra(Constants.QUOTES_TYPE_KEY, sectionKey)
