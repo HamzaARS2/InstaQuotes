@@ -30,6 +30,9 @@
             <item android:id="@+id/nav_rate_menu_item"
                 android:title="Rate App"
                 android:icon="@drawable/ic_star_app"/>
+            <item android:id="@+id/nav_log_out_menu_item"
+                android:title="Log out"
+                android:icon="@drawable/logout_black_24dp"/>
             <item android:id="@+id/nav_exit_menu_item"
                 android:title="Exit"
                 android:icon="@drawable/ic_exit_app"/>

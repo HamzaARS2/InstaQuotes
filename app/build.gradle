@@ -32,6 +32,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -77,6 +81,8 @@ dependencies {
     // Firebase ui
     implementation 'com.firebaseui:firebase-ui-firestore:8.0.0'
 
+    // Firebase Auth
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
 
 

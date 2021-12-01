@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.ktx.Firebase
 import com.reddevx.thenewquotes.ui.MainActivity
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Category
@@ -37,6 +39,7 @@ class MainAdapter(
     private lateinit var categoryAdapter:CategoryAdapter
     private lateinit var recentQuotesAdapter:RecentQuotesAdapter
     private val fireStore = FirebaseFirestore.getInstance()
+    private val fAuth = FirebaseAuth.getInstance()
 
 
 
@@ -111,6 +114,7 @@ class MainAdapter(
     private fun loadFeaturedQuotes(){
         val mFeaturedColl = fireStore.collection("quotes")
         mFeaturedColl
+            .orderBy("date",Query.Direction.DESCENDING)
             .limit(14)
             .get()
             .addOnSuccessListener(mContext, object : OnSuccessListener<QuerySnapshot> {
@@ -136,7 +140,12 @@ class MainAdapter(
 
     private fun loadRecentQuotes(){
         val mRecentColl = fireStore.collection("recent")
-        mRecentColl.limit(10).addSnapshotListener(mContext, object : EventListener<QuerySnapshot> {
+        val mFavoriteColl = fireStore.collection("favorites")
+        val userId = fAuth.currentUser?.uid
+        mRecentColl
+            .orderBy("date",Query.Direction.DESCENDING)
+            .limit(10)
+            .addSnapshotListener(mContext, object : EventListener<QuerySnapshot> {
             override fun onEvent(snapShot: QuerySnapshot?, error: FirebaseFirestoreException?) {
                 if (error != null){
                     Log.w("Listen failed",error.toString())
@@ -147,8 +156,20 @@ class MainAdapter(
                     val quoteText = doc.getString(MainActivity.Constants.FIRE_STORE_QUOTE_KEY)!!
                     val category = doc.getString(MainActivity.Constants.FIRE_STORE_CATEGORY_KEY)!!
                     val quote = Quote(imageUrl,quoteText,category)
-                    recentQuotes.add(quote)
-                    recentQuotesAdapter.notifyItemInserted(recentQuotes.size - 1)
+                    mFavoriteColl.whereEqualTo("id",userId).get().addOnCompleteListener { task ->
+                        if (task.isSuccessful){
+                            val documents = task.result?.documents
+                           first@ for (doc in documents!!){
+                                if (doc.getString("quote") == quoteText){
+                                    quote.isFavorite = true
+                                    break@first
+                                }
+                            }
+                            recentQuotes.add(quote)
+                            recentQuotesAdapter.notifyItemInserted(recentQuotes.size - 1)
+                        }
+                    }
+
                 }
             }
         })

@@ -1,21 +1,25 @@
 package com.reddevx.thenewquotes.ui
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.reddevx.thenewquotes.QuoteLoader
 import com.reddevx.thenewquotes.R
@@ -48,6 +52,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         const val FIRE_STORE_QUOTE_KEY = "quote"
         const val FIRE_STORE_CATEGORY_KEY = "category"
     }
+    private var doubleBackPressToExit = true
 
     private lateinit var mainAdapter: MainAdapter
     private lateinit var mainRecyclerView: RecyclerView
@@ -57,6 +62,8 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     private lateinit var navigationView: NavigationView
 
     private lateinit var refreshLayout: SwipeRefreshLayout
+
+    private val fAuth:FirebaseAuth = FirebaseAuth.getInstance()
 
 
 
@@ -98,6 +105,27 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (fAuth.currentUser == null){
+            startActivity(Intent(this,LoginActivity::class.java))
+            finish()
+        }
+        else
+        Toast.makeText(this, fAuth.currentUser?.email, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onBackPressed() {
+        if (!doubleBackPressToExit){
+            super.onBackPressed()
+            finishAffinity()
+            return
+        }
+
+        doubleBackPressToExit = false
+        Toast.makeText(this, "Tap again to exit", Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackPressToExit = true }, 2000)
+    }
 
 
 
@@ -111,7 +139,6 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         when (item.itemId) {
             R.id.notification_item -> {
                 val intent = Intent(this, NotificationsActivity::class.java)
-                //intent.putParcelableArrayListExtra("noti_data", arrayListOf())//send list of notifications
                 startActivity(intent)
             }
             R.id.search_item -> {
@@ -176,7 +203,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             Category(R.drawable.angry_circle, "Angry", getQuotes()),
             Category(R.drawable.family_circle, "Family", getQuotes()),
             Category(R.drawable.friendship_circle, "Friendship", getQuotes()),
-            Category(R.drawable.funny_circle, "Funny", getQuotes()),
+            Category(R.drawable.patience_circle, "Patience", getQuotes()),
             Category(R.drawable.life_circle, "Life", getQuotes())
         )
     }
@@ -245,13 +272,12 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
     override fun onCategoryClick(category: Category, position: Int) {
         val intent = Intent(this, CategoryQuotesActivity::class.java)
-        intent.putExtra(Constants.CATEGORY_KEY, category)
+        intent.putExtra(Constants.CATEGORY_KEY, category.categoryName)
         intent.putExtra(Constants.QUOTES_TYPE_KEY, Constants.FROM_SECTION_TWO)
         startActivity(intent)
     }
 
     override fun onViewAllTvClick(quotes: ArrayList<Quote>, position: Int, sectionKey: String) {
-        Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, CategoryQuotesActivity::class.java)
         intent.putParcelableArrayListExtra(Constants.QUOTE_LIST_KEY, quotes)
         intent.putExtra(Constants.QUOTES_TYPE_KEY, sectionKey)
@@ -298,13 +324,39 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
                 }
                 drawerLayout.closeDrawer(GravityCompat.START)
                 startActivity(Intent.createChooser(intent, "Install App from:"))
-
-
+            }
+            R.id.nav_log_out_menu_item -> {
+                fAuth.signOut()
+                startActivity(Intent(this,LoginActivity::class.java))
+            }
+            R.id.nav_exit_menu_item -> {
+                showDialog()
             }
 
         }
 
         return true
+    }
+
+    private fun showDialog(){
+        val dialog:AlertDialog
+
+        val dialogInterface = DialogInterface.OnClickListener { dialog, which ->
+            when(which){
+                DialogInterface.BUTTON_POSITIVE -> finishAffinity()
+                DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
+            }
+        }
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Exit")
+            .setMessage("Are you sure you want to close the app?")
+            .apply {
+                setPositiveButton("YES",dialogInterface)
+                setNegativeButton("NO",dialogInterface)
+            }
+        dialog = builder.create()
+        dialog.show()
+
     }
 
     override fun onRefresh() {
