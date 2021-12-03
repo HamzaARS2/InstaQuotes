@@ -5,9 +5,11 @@ import android.widget.Filterable
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.SearchActivity
 
-class SearchQuotesAdapter(private val quotes:ArrayList<Quote>, private val allQuotes:ArrayList<Quote>, val context: SearchActivity)
-    : RecentQuotesAdapter(recentQuotesList = quotes ,listener = context,context = context)
+class SearchQuotesAdapter(private val quotes:ArrayList<Quote>,private val allQuotes: ArrayList<Quote>, val context: SearchActivity)
+    : RecentQuotesAdapter(recentQuotesList = quotes ,listener = context,favListener = context,context = context)
     , Filterable {
+
+
 
     private val filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
@@ -33,6 +35,10 @@ class SearchQuotesAdapter(private val quotes:ArrayList<Quote>, private val allQu
             notifyDataSetChanged()
 
         }
+    }
+
+    fun notifyChanges(){
+        notifyItemRangeChanged(0,quotes.size)
     }
 
 

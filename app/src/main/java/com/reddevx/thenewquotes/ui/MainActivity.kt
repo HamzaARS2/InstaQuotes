@@ -2,11 +2,11 @@ package com.reddevx.thenewquotes.ui
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -17,23 +17,22 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.firestore.*
-import com.reddevx.thenewquotes.QuoteLoader
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.adapters.MainAdapter
 import com.reddevx.thenewquotes.database.DatabaseManager
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
 
 
 class MainActivity : AppCompatActivity(), QuoteInteraction,
-    NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+    NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener ,FavoriteListener{
+
 
     object Constants {
         const val QUOTE_LIST_KEY = "quote_list"
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
     private lateinit var refreshLayout: SwipeRefreshLayout
     private var doubleBackPressToExit = true
-    private lateinit var dbManager:DatabaseManager
+
 
 
 
@@ -80,10 +79,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         navigationView = findViewById(R.id.navigation_view)
         refreshLayout = findViewById(R.id.swipe_refresh_layout)
         mainRecyclerView = findViewById(R.id.main_recycler_view)
-        dbManager = DatabaseManager.invoke(this)!!
-        dbManager.open()
-        Toast.makeText(this, dbManager.getUserFavorites()[0].quoteText, Toast.LENGTH_SHORT).show()
-        dbManager.close()
+
 
         navigationView.setNavigationItemSelectedListener(this)
         refreshLayout.setOnRefreshListener(this)
@@ -105,8 +101,12 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
         }
 
+        CategoryQuotesActivity.setOnFavoriteClickListener(this)
+
 
     }
+
+
 
     override fun onBackPressed() {
         if (!doubleBackPressToExit){
@@ -298,7 +298,6 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             }
             R.id.nav_favorites_menu_item -> {
                 val intent = Intent(this, CategoryQuotesActivity::class.java)
-                intent.putParcelableArrayListExtra(Constants.FAVORITES_KEY, getQuotes())
                 intent.putExtra(Constants.QUOTES_TYPE_KEY, Constants.FROM_FAVORITES)
                 drawerLayout.closeDrawer(GravityCompat.START)
                 startActivity(intent)
@@ -322,6 +321,16 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
 
             }
+            R.id.nav_rate_menu_item -> {
+                val uri = Uri.parse("https://play.google.com/store/apps/details?id=com.rm.instaquotes")
+                val intent = Intent(Intent.ACTION_VIEW,uri)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                try {
+                    startActivity(intent)
+                }catch (e:Exception){
+                    Toast.makeText(this, "Error : ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
             R.id.nav_exit_menu_item -> showDialog()
 
         }
@@ -329,8 +338,10 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         return true
     }
 
+
+
     private fun showDialog(){
-        val dialog: AlertDialog
+        val mDialog: AlertDialog
 
         val dialogInterface = DialogInterface.OnClickListener { dialog, which ->
             when(which){
@@ -345,8 +356,8 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
                 setPositiveButton("YES",dialogInterface)
                 setNegativeButton("NO",dialogInterface)
             }
-        dialog = builder.create()
-        dialog.show()
+        mDialog = builder.create()
+        mDialog.show()
 
     }
 
@@ -356,6 +367,10 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         startActivity(intent)
         overridePendingTransition(0, 0);
         refreshLayout.isRefreshing = false
+    }
+
+    override fun onFavoriteClick() {
+        mainAdapter.notifyChanges()
     }
 
 

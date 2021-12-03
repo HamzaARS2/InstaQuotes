@@ -1,5 +1,7 @@
 package com.reddevx.thenewquotes.ui
 
+import android.annotation.SuppressLint
+import android.app.WallpaperManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -14,18 +16,26 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.Toolbar
+import android.view.View
+import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.bumptech.glide.Glide
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.adapters.QuotesPagerAdapter
+import com.reddevx.thenewquotes.database.DatabaseManager
 import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -35,29 +45,43 @@ import java.util.*
 import java.util.jar.Manifest
 import kotlin.collections.ArrayList
 
-class FeaturedQuotesActivity : AppCompatActivity() {
+class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var quoteViewPager:ViewPager2
     private lateinit var viewPagerAdapter:QuotesPagerAdapter
     private lateinit var counterTv:TextView
+    private lateinit var heartCheckBox: CheckBox
+
     private lateinit var quoteList:ArrayList<Quote>
+    private lateinit var currentQuote:Quote
+
+    private val db = DatabaseManager.invoke(this)!!
+
     private var quotePosition:Int = -1
+
+    companion object {
+        private lateinit var mListener: FavoriteListener
+        fun setOnFavoriteClickListener(listener: FavoriteListener){
+            mListener = listener
+        }
+    }
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_featured_quotes)
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.featured_quotes_toolbar)
+        heartCheckBox = findViewById(R.id.page_favorite_item)
+        quoteViewPager = findViewById(R.id.quote_view_pager)
         toolbar.title = ""
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         counterTv = findViewById(R.id.page_menu_counter_tv)
 
-        window.setFormat(PixelFormat.RGBA_8888)
-
-
 
         quoteList  = intent.getParcelableArrayListExtra<Quote>(MainActivity.Constants.QUOTE_LIST_KEY) as ArrayList<Quote>
         val currentPosition = intent.getIntExtra(MainActivity.Constants.QUOTE_POSITION_KEY,-1)
-        quoteViewPager = findViewById(R.id.quote_view_pager)
+        currentQuote = quoteList[currentPosition]
+
         viewPagerAdapter = QuotesPagerAdapter(quoteList,this)
 
         val compositePageTransformer = CompositePageTransformer()
@@ -75,21 +99,37 @@ class FeaturedQuotesActivity : AppCompatActivity() {
             setCurrentItem(currentPosition,false)
 
         }
+
+        heartCheckBox.isChecked = isFavorite(quoteList[currentPosition].quoteText)
+
+
         counterTv.text = "${currentPosition+1} / ${quoteList.size}"
         quotePosition = currentPosition+1
         quoteViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 quotePosition = position
+                currentQuote = quoteList[position]
                 counterTv.text = "${quotePosition+1} / ${quoteList.size}"
+                heartCheckBox.isChecked = isFavorite(currentQuote.quoteText)
+
             }
 
         })
 
+        heartCheckBox.setOnClickListener(this)
 
+    }
 
+    private fun showToast(content:String){
+        Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
+    }
 
-
+    private fun isFavorite(quoteText:String) : Boolean{
+        db.open()
+        val result = db.isFromFavorites(quoteText)
+        db.close()
+        return result
     }
 
     private fun saveImage() {
@@ -179,16 +219,33 @@ class FeaturedQuotesActivity : AppCompatActivity() {
                 clipBoard.setPrimaryClip(clip)
                 Toast.makeText(this, "Copied to Clipboard!", Toast.LENGTH_SHORT).show()
             }
-            R.id.page_menu_download_item -> {
-                // Try to use IntentService to download in background
-                //saveImage()
-            }
+//            R.id.page_menu_download_item -> {
+//                // Try to use IntentService to download in background
+//                //saveImage()
+//            }
 
         }
         return true
     }
 
-
+    override fun onClick(view: View?) {
+        val checkBox = view as CheckBox
+        db.open()
+        if (checkBox.isChecked){
+            if (db.insert(currentQuote)) {
+                showToast("This quote is added to Favorite list!")
+                mListener.onFavoriteClick()
+            }
+            else showToast("Something went wrong!")
+        }else {
+            if (db.delete(currentQuote)) {
+                showToast("This quote is removed from Favorite list!")
+                mListener.onFavoriteClick()
+            }
+            else showToast("Something went wrong!")
+        }
+        db.close()
+    }
 
 
 }

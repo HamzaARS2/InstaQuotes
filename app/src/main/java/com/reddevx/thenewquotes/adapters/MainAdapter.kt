@@ -79,7 +79,7 @@ class MainAdapter(
         }else if (holder is SectionTwoViewHolder){
             // section two (Categories)
             val sectionTwoViewHolder:SectionTwoViewHolder = holder
-            categoryAdapter = CategoryAdapter(categoryList,mContext)
+            categoryAdapter = CategoryAdapter(categoryList,mContext,CategoryAdapter.SECTION_TWO_TYPE)
             sectionTwoViewHolder.childRecyclerView.apply {
                 adapter = categoryAdapter
                 layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
@@ -106,6 +106,10 @@ class MainAdapter(
 
         }
 
+    }
+
+    fun notifyChanges(){
+        recentQuotesAdapter.notifyItemRangeChanged(0,10)
     }
 
     private fun loadFeaturedQuotes(){

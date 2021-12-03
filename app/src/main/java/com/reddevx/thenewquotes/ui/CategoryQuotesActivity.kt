@@ -1,5 +1,6 @@
 package com.reddevx.thenewquotes.ui
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,15 +9,17 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.adapters.CategoryAdapter
 import com.reddevx.thenewquotes.adapters.RecentQuotesAdapter
+import com.reddevx.thenewquotes.database.DatabaseManager
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 
 class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
@@ -30,6 +33,13 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
     private val categoryQuotesList = ArrayList<Quote>()
 
     private val fireStore = FirebaseFirestore.getInstance()
+
+    companion object{
+        private lateinit var mListener:FavoriteListener
+        fun setOnFavoriteClickListener(listener: FavoriteListener){
+            mListener = listener
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,13 +56,9 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
         if (intent != null) {
             prepareData()
         }
-
-
-
-
     }
 
-    private fun loadCategoryQuotes(mCategory:String){
+    private fun loadAllQuotes(mCategory:String){
         val mFeaturedColl = fireStore.collection("quotes")
         val mRecentColl = fireStore.collection("recent")
         mFeaturedColl
@@ -83,16 +89,15 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
                     quotesAdapter.notifyItemInserted(categoryQuotesList.size - 1)
                 }
             }
-
     }
 
     private fun prepareCategory(intent: Intent) : Boolean {
         if (intent.getStringExtra(MainActivity.Constants.QUOTES_TYPE_KEY).equals(MainActivity.Constants.FROM_SECTION_TWO)){
             val categoryName:String = intent.getStringExtra(MainActivity.Constants.CATEGORY_KEY)!!
-            quotesAdapter = RecentQuotesAdapter(categoryQuotesList,this,context = this)
+            quotesAdapter = RecentQuotesAdapter(categoryQuotesList,this, mListener,context = this)
             toolbarTv.text = categoryName
             toolbarDelBtn.visibility = View.GONE
-            loadCategoryQuotes(categoryName)
+            loadAllQuotes(categoryName)
             buildRecyclerView(GridLayoutManager(this,2))
             return true
         }
@@ -131,7 +136,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
     private fun prepareRecentQuotes(intent: Intent) : Boolean {
         if (intent.getStringExtra(MainActivity.Constants.QUOTES_TYPE_KEY).equals(MainActivity.Constants.FROM_SECTION_THREE)){
             val recentQuotes:ArrayList<Quote> = intent.getParcelableArrayListExtra(MainActivity.Constants.QUOTE_LIST_KEY)!!
-            quotesAdapter = RecentQuotesAdapter(recentQuotes,this,context = this)
+            quotesAdapter = RecentQuotesAdapter(recentQuotes,this, mListener,context = this)
             toolbarTv.text = "Recent Quotes"
             toolbarDelBtn.visibility = View.GONE
             buildRecyclerView(StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL))
@@ -143,7 +148,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
     private fun prepareCategories(intent: Intent) : Boolean {
         if (intent.getStringExtra(MainActivity.Constants.QUOTES_TYPE_KEY).equals(MainActivity.Constants.FROM_NAV_CATEGORIES)){
             val categories:ArrayList<Category> = intent.getParcelableArrayListExtra(MainActivity.Constants.CATEGORIES_KEY)!!
-            val categoryAdapter = CategoryAdapter(categories,this)
+            val categoryAdapter = CategoryAdapter(categories,this,CategoryAdapter.NAV_CATEGORIES_TYPE)
             toolbarTv.text = "Categories"
             buildRecyclerView(GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false),categoryAdapter)
             return true
@@ -153,10 +158,17 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
 
     private fun prepareFavorites(intent: Intent) : Boolean {
         if (intent.getStringExtra(MainActivity.Constants.QUOTES_TYPE_KEY).equals(MainActivity.Constants.FROM_FAVORITES)) {
-            val favorites:ArrayList<Quote> = intent.getParcelableArrayListExtra(MainActivity.Constants.FAVORITES_KEY)!!
-            quotesAdapter = RecentQuotesAdapter(favorites,listener = this,isFavorties = true,context = this)
+            val db = DatabaseManager.invoke(this)!!
+            db.open()
+            val favorites = db.getUserFavorites()
+            db.close()
+            quotesAdapter = RecentQuotesAdapter(favorites,listener = this,
+                mListener,isFavorties = true,context = this)
             toolbarTv.text = "Favorites"
             toolbarDelBtn.visibility = View.VISIBLE
+            toolbarDelBtn.setOnClickListener {
+                showDialog()
+            }
             val favoritesRv = buildRecyclerView(LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false))
             favoritesRv.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.VERTICAL))
             return true
@@ -189,10 +201,14 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
     }
 
     override fun onCategoryClick(category: Category, position: Int) {
-        Toast.makeText(this, category.categoryName, Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, CategoryQuotesActivity::class.java)
+        intent.putExtra(MainActivity.Constants.CATEGORY_KEY, category.categoryName)
+        intent.putExtra(MainActivity.Constants.QUOTES_TYPE_KEY, MainActivity.Constants.FROM_SECTION_TWO)
+        startActivity(intent)
     }
 
-    override fun onViewAllTvClick(quotes: ArrayList<Quote>, position: Int, sectionKey: String){}
+    override fun onViewAllTvClick(quotes: ArrayList<Quote>, position: Int, sectionKey: String){
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
@@ -201,4 +217,33 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
         }
         return true
     }
+
+    private fun showDialog(){
+        val mDialog: AlertDialog
+        val dialogInterface = DialogInterface.OnClickListener { dialog, which ->
+            when(which){
+                DialogInterface.BUTTON_POSITIVE -> {
+                        val db = DatabaseManager.invoke(this)!!
+                        db.open()
+                        db.deleteAll()
+                        db.close()
+                        quotesAdapter.removeAll()
+                }
+                DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
+            }
+        }
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Favorites")
+            .setMessage("Do you want to delete all favorite quotes?")
+            .apply {
+                setPositiveButton("YES",dialogInterface)
+                setNegativeButton("NO",dialogInterface)
+            }
+        mDialog = builder.create()
+        mDialog.show()
+
+    }
+
+
+
 }

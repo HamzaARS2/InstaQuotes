@@ -1,23 +1,29 @@
 package com.reddevx.thenewquotes.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 import de.hdodenhof.circleimageview.CircleImageView
 
-class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:QuoteInteraction) :
+class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:QuoteInteraction,private val viewType:Int) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
+    companion object {
+        const val SECTION_TWO_TYPE = 0
+        const val NAV_CATEGORIES_TYPE = 1
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        return CategoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.categorie_item,parent,false))
+        if (viewType == SECTION_TWO_TYPE)
+        return CategoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.section_two_categories_item,parent,false))
+        else
+            return CategoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.categories_item,parent,false))
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
@@ -29,9 +35,13 @@ class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:
     }
 
     override fun getItemCount(): Int = categoryList.size
+    override fun getItemViewType(position: Int): Int {
+        if (viewType == SECTION_TWO_TYPE)
+            return SECTION_TWO_TYPE
+        return NAV_CATEGORIES_TYPE
+    }
 
     inner class CategoryViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener {
-
 
         val categoryImage:CircleImageView
         val categoryName:TextView
@@ -48,6 +58,7 @@ class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:
         }
 
     }
+
 
 
 

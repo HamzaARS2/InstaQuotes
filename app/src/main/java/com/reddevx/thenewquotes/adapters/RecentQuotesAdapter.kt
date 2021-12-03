@@ -11,12 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.reddevx.thenewquotes.R
+import com.reddevx.thenewquotes.database.Database
+import com.reddevx.thenewquotes.database.DatabaseManager
 import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 
 open class RecentQuotesAdapter(
     private var recentQuotesList: ArrayList<Quote> = arrayListOf(),
     private val listener: QuoteInteraction? = null,
+    private var favListener:FavoriteListener? = null,
     private val isFavorties: Boolean = false,
     private val context: Context
 ) :
@@ -24,6 +28,9 @@ open class RecentQuotesAdapter(
 
     val FAVORITES = 0
     val NOT_FAVORTIES = 1
+
+
+    private val db = DatabaseManager.invoke(context)!!
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == FAVORITES) {
@@ -41,29 +48,36 @@ open class RecentQuotesAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val quote = recentQuotesList[position]
         if (holder is RecentQuotesViewHolder) {
             holder.apply {
                 Glide.with(itemView)
-                    .load(recentQuotesList[position].imageUrl)
+                    .load(quote.imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .into(recentQuoteImage)
+                quoteTextTv.text = quote.quoteText
+                quoteCategoryTv.text = quote.category
+                recentHeartBox.isChecked = isFavorite(quote.quoteText)
 
-                quoteTextTv.text = recentQuotesList[position].quoteText
-                quoteCategoryTv.text = recentQuotesList[position].category
+
             }
         } else {
             (holder as FavoriteQuotesViewHolder).apply {
                 Glide.with(itemView)
-                    .load(recentQuotesList[position].imageUrl)
+                    .load(quote.imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .into(favortieQuoteImage)
-                favortieQuoteTv.text = recentQuotesList[position].quoteText
-                favortieQuoteCategoryTv.text = recentQuotesList[position].category
+                favortieQuoteTv.text = quote.quoteText
+                favortieQuoteCategoryTv.text = quote.category
+
             }
         }
     }
 
     override fun getItemCount(): Int = recentQuotesList.size
+
+    private fun getCurrentQuote(position: Int) :Quote = recentQuotesList[position]
+
 
 
 
@@ -88,6 +102,8 @@ open class RecentQuotesAdapter(
 
         }
 
+
+
         override fun onClick(v: View?) {
             when (v) {
                 itemView -> {
@@ -96,34 +112,28 @@ open class RecentQuotesAdapter(
                 }
                 recentHeartBox -> {
                     if (recentHeartBox.isChecked)
-                        Toast.makeText(
-                            context,
-                            "This quote is added to Favorite list!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    else
-                        Toast.makeText(
-                            context,
-                            "This quote is removed from Favorite list!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        addQuote(bindingAdapterPosition)
+                    else removeQuote(bindingAdapterPosition)
                 }
-                shareBtn -> {
-                    if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                        val intent = Intent(Intent.ACTION_SEND)
-                        intent.apply {
-                            type = "text/plain"
-                            val quoteToShare = recentQuotesList[bindingAdapterPosition].quoteText
-                            putExtra(
-                                Intent.EXTRA_TEXT,
-                                "${quoteToShare} \n https://play.google.com/store/apps/details?id=com.rm.instaquotes"
-                            )
-                        }
-                        startActivity(context,Intent.createChooser(intent,"Install App!"),null)
-                    }
-
-                }
+                shareBtn -> shareQuote(bindingAdapterPosition)
             }
+
+        }
+
+        private fun addQuote(position: Int){
+            val result = addFavorite(getCurrentQuote(position))
+            if (position != RecyclerView.NO_POSITION)
+                favListener?.onFavoriteClick()
+            if (result) showToast("This quote is added to Favorite list!")
+            else showToast("Something went wrong!")
+        }
+
+        private fun removeQuote(position: Int){
+            val result = deleteFavorite(getCurrentQuote(position))
+            if (position != RecyclerView.NO_POSITION)
+                favListener?.onFavoriteClick()
+            if (result) showToast("This quote is removed from Favorite list!")
+            else showToast("Something went wrong!")
 
         }
 
@@ -135,19 +145,64 @@ open class RecentQuotesAdapter(
         val favortieQuoteTv: TextView
         val favortieQuoteCategoryTv: TextView
         val favortieShareBtn: ImageButton
+        val heartCheckBox:CheckBox
 
         init {
             favortieQuoteImage = itemView.findViewById(R.id.favorite_quote_img)
             favortieQuoteTv = itemView.findViewById(R.id.favorite_quote_tv)
             favortieQuoteCategoryTv = itemView.findViewById(R.id.favorite_quote_category_tv)
             favortieShareBtn = itemView.findViewById(R.id.favorite_quote_share_btn)
+            heartCheckBox = itemView.findViewById(R.id.favorite_quote_heart_checkBox)
+            heartCheckBox.setOnClickListener(this)
+            favortieShareBtn.setOnClickListener(this)
             itemView.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {
+            when(v){
+                itemView -> {
+                    if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+                        listener?.onQuoteClick(recentQuotesList, bindingAdapterPosition)
+                }
+                heartCheckBox -> removeQuote(bindingAdapterPosition)
+                favortieShareBtn -> shareQuote(bindingAdapterPosition)
+            }
+        }
 
-            if (bindingAdapterPosition != RecyclerView.NO_POSITION)
-                listener?.onQuoteClick(recentQuotesList, bindingAdapterPosition)
+         private fun removeQuote(position: Int){
+            val result = deleteFavorite(getCurrentQuote(position))
+                favListener?.onFavoriteClick()
+            if (result) {
+                showToast("This quote is removed from Favorite list!")
+                recentQuotesList.removeAt(position)
+                notifyItemRemoved(position)
+            }
+            else showToast("Something went wrong!")
+
+        }
+    }
+
+    fun removeAll(){
+        val size = recentQuotesList.size
+        recentQuotesList.clear()
+        notifyItemRangeRemoved(0,size)
+        favListener?.onFavoriteClick()
+    }
+
+
+
+    private fun shareQuote(position: Int){
+        if (position != RecyclerView.NO_POSITION) {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.apply {
+                type = "text/plain"
+                val quoteToShare = recentQuotesList[position].quoteText
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    "${quoteToShare} \n https://play.google.com/store/apps/details?id=com.rm.instaquotes"
+                )
+            }
+            startActivity(context,Intent.createChooser(intent,"Install App!"),null)
         }
     }
 
@@ -158,6 +213,35 @@ open class RecentQuotesAdapter(
             FAVORITES
         else
             NOT_FAVORTIES
+    }
+
+    private fun addFavorite(quote: Quote) : Boolean{
+        db.open()
+        val result = db.insert(quote)
+        db.close()
+        return result
+    }
+
+    private fun deleteFavorite(quote: Quote) : Boolean{
+        db.open()
+        val result = db.delete(quote)
+        db.close()
+        return result
+    }
+
+    private fun showToast(content:String){
+        Toast.makeText(context, content, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun isFavorite(quoteText:String) : Boolean {
+        db.open()
+        val favorites = db.getUserFavorites()
+        db.close()
+        for (value in favorites){
+            if (value.quoteText == quoteText)
+                return true
+        }
+        return false
     }
 
 

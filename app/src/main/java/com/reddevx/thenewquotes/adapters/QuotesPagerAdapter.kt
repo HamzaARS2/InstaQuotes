@@ -22,7 +22,7 @@ class QuotesPagerAdapter(private val quoteList:ArrayList<Quote>,val context: Con
     override fun onBindViewHolder(holder: QuotesPagerViewHolder, position: Int) {
         holder.apply {
 
-            Glide.with(itemView)
+            Glide.with(context)
                 .load(quoteList[position].imageUrl)
                 .centerCrop()
                 .into(quoteImg)

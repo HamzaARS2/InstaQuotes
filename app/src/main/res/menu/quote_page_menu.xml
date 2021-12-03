@@ -8,9 +8,9 @@
 
 
 
-<!--    <item android:id="@+id/page_menu_item_3"-->
-<!--        android:title="Set as Wallpaper"-->
-<!--        app:showAsAction="never"/>-->
+    <item android:id="@+id/page_menu_item_wallpaper"
+        android:title="Set as Wallpaper"
+        app:showAsAction="never"/>
 
     <item android:id="@+id/page_menu_item_copy"
         android:title="Copy content"
@@ -22,8 +22,8 @@
         android:icon="@drawable/baseline_share_black_24dp"
         app:showAsAction="always"/>
 
-    <item android:id="@+id/page_menu_download_item"
-        android:title="Download Image"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_download" />
+<!--    <item android:id="@+id/page_menu_download_item"-->
+<!--        android:title="Download Image"-->
+<!--        app:showAsAction="never"-->
+<!--        android:icon="@drawable/ic_download" />-->
 </menu>

@@ -39,11 +39,27 @@ class DatabaseManager private constructor(private val context: Context,
         return result != -1L
     }
 
+    fun isFromFavorites(quoteText:String) : Boolean {
+        val cursor = database.rawQuery("SELECT * FROM ${Database.FAVORITE_TABLE_NAME} WHERE ${Database.FAVORITE_CLM_QUOTE} = ?",
+            arrayOf(quoteText))
+        if (cursor.moveToNext()){
+            cursor.close()
+            return true
+        }else{
+            cursor.close()
+            return false
+        }
+    }
+
     fun delete(quote: Quote) : Boolean {
         val result = database.delete(Database.FAVORITE_TABLE_NAME,
             Database.FAVORITE_CLM_QUOTE + " = ?",
             arrayOf(quote.quoteText))
         return result > 0
+    }
+
+    fun deleteAll() : Boolean {
+        return database.delete(Database.FAVORITE_TABLE_NAME, null,null) > 0
     }
 
 

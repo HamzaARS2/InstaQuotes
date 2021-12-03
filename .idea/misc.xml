@@ -23,7 +23,7 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/activity_search.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/categorie_item.xml" value="0.25" />
-        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/favorite_quote_item.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/favorite_quote_item.xml" value="0.1" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/featured_quote_page.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/fragment_author.xml" value="0.23143115942028986" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/fragment_favorite.xml" value="0.23143115942028986" />
@@ -31,10 +31,11 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/image_place_holder_layout.xml" value="0.33" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/latest_quote_item.xml" value="0.25" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/nav_header.xml" value="0.33" />
-        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/recent_quote_item.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/recent_quote_item.xml" value="0.1" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/section_one.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/section_three.xml" value="0.33" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/section_two.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/layout/section_two_categories_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/menu/nav_drawer_menu.xml" value="0.33" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/menu/nav_header_menu.xml" value="0.1" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/TheNewQuotes/app/src/main/res/menu/navigation_menu.xml" value="0.1" />
