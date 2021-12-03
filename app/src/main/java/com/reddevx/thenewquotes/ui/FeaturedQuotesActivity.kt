@@ -224,6 +224,25 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
 //                //saveImage()
 //            }
 
+            R.id.page_menu_item_wallpaper -> {
+
+              val loading = ImageLoader(this)
+              val request = ImageRequest.Builder(this)
+                  .data(currentQuote.imageUrl)
+                  .build()
+                GlobalScope.launch {
+                    val result = (loading.execute(request) as SuccessResult).drawable
+                    val bitmap = (result as BitmapDrawable).bitmap
+                    val wallpaperManager = WallpaperManager.getInstance(applicationContext)
+                    wallpaperManager.setBitmap(bitmap)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        showToast("Wallpaper successfully set!")
+                    }
+                }
+
+
+            }
+
         }
         return true
     }
