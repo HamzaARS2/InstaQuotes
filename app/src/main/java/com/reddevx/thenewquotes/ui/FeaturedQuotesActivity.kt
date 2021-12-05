@@ -6,11 +6,13 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
 import android.graphics.drawable.BitmapDrawable
 import android.media.MediaScannerConnection
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
@@ -18,6 +20,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -32,13 +35,12 @@ import com.reddevx.thenewquotes.adapters.QuotesPagerAdapter
 import com.reddevx.thenewquotes.database.DatabaseManager
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
@@ -147,53 +149,83 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         val fileName = "${file.absolutePath}/$name"
         val newFile = File(fileName)
 
-        val bitmap = getBitmap(quoteList[quotePosition].imageUrl)
-
-
-        try {
-            if (bitmap != null){
-                fileOutputStream = FileOutputStream(newFile)
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100,fileOutputStream)
-                Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show()
-            }else {
-                Toast.makeText(this, "Something went wrong! please try again", Toast.LENGTH_SHORT).show()
+        GlobalScope.launch {
+            val bitmap = downloadImage(quoteList[quotePosition].imageUrl)
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    if (bitmap != null){
+                        fileOutputStream = FileOutputStream(newFile)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG,100,fileOutputStream)
+                        showToast("Image saved successfully")
+                    }else {
+                        showToast("Something went wrong! please try again")
+                    }
+                    fileOutputStream?.flush()
+                    fileOutputStream?.close()
+                }catch (e:IOException){
+                    showToast("Error: ${e.message}")
+                }
+                updateGallery(file)
             }
-            fileOutputStream?.flush()
-            fileOutputStream?.close()
-        }catch (e:IOException){
-            Toast.makeText(this, "Error: $e", Toast.LENGTH_SHORT).show()
 
         }
 
-        updateGallery(file)
+
+
+
 
     }
 
-    fun updateGallery(file: File){
+    private fun updateGallery(file: File){
         MediaScannerConnection.scanFile(this, arrayOf(file.toString()),null,null)
     }
 
     private fun getDir() : File {
-        val file: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val file: File? = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
         return File(file,"QuoteImage")
     }
 
-    private fun getBitmap(imageUrl:String) : Bitmap? {
-        try {
-            val url = URL(imageUrl)
-            val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-            return bitmap
-        } catch (e:IOException){
-            Toast.makeText(this, "Error: $e", Toast.LENGTH_SHORT).show()
-        }
-        return null
-    }
-
+//    private fun getBitmap(imageUrl:String) : Bitmap? {
+//        try {
+//            val url = URL(imageUrl)
+//            val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+//            return bitmap
+//        } catch (e:IOException){
+//            Toast.makeText(this, "Error: $e", Toast.LENGTH_SHORT).show()
+//        }
+//        return null
+//    }
+//
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.quote_page_menu,menu)
         return super.onCreateOptionsMenu(menu)
     }
 
+    private fun getBitmap(imageUrl:String) : Bitmap? {
+        val url = URL(imageUrl)
+        val urlConnection = url.openConnection() as HttpURLConnection
+        var bitmap:Bitmap? = null
+        try {
+            val inputStream = BufferedInputStream(urlConnection.inputStream)
+            bitmap = BitmapFactory.decodeStream(inputStream)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        finally {
+            urlConnection.disconnect()
+        }
+        return bitmap
+    }
+
+    private suspend fun downloadImage(imageUrl: String): Bitmap? {
+        val result: Deferred<Bitmap?> = GlobalScope.async {
+            getBitmap(imageUrl)
+        }
+        val bitmap = result.await()
+        return bitmap
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -221,7 +253,7 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
             }
 //            R.id.page_menu_download_item -> {
 //                // Try to use IntentService to download in background
-//                //saveImage()
+//               // saveImage()
 //            }
 
             R.id.page_menu_item_wallpaper -> {
@@ -239,8 +271,6 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
                         showToast("Wallpaper successfully set!")
                     }
                 }
-
-
             }
 
         }

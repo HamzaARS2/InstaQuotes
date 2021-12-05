@@ -9,10 +9,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.adapters.CategoryAdapter
 import com.reddevx.thenewquotes.adapters.RecentQuotesAdapter
@@ -75,7 +77,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
                 }
             }
             .addOnFailureListener(this
-            ) { e -> Log.e("GGGGGGG", "onFailure: $e",) }
+            ) { e -> Log.e("Listening failed!>", "onFailure: $e",) }
         mRecentColl
             .whereEqualTo("category",mCategory)
             .get()
@@ -147,13 +149,34 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
 
     private fun prepareCategories(intent: Intent) : Boolean {
         if (intent.getStringExtra(MainActivity.Constants.QUOTES_TYPE_KEY).equals(MainActivity.Constants.FROM_NAV_CATEGORIES)){
-            val categories:ArrayList<Category> = intent.getParcelableArrayListExtra(MainActivity.Constants.CATEGORIES_KEY)!!
+            val categories = ArrayList<Category>()
             val categoryAdapter = CategoryAdapter(categories,this,CategoryAdapter.NAV_CATEGORIES_TYPE)
             toolbarTv.text = "Categories"
             buildRecyclerView(GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false),categoryAdapter)
+            loadCategories(categories,categoryAdapter)
             return true
         }
         return false
+    }
+
+    private fun loadCategories(categories:ArrayList<Category>, adapter: CategoryAdapter){
+        val mCategoryColl = fireStore.collection("categories")
+        mCategoryColl
+            .orderBy("name",Query.Direction.ASCENDING)
+            .addSnapshotListener(this) { snapShot, error ->
+                if (error != null){
+                    Toast.makeText(this, "Error :${error.message}", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
+                }
+
+                for (doc in snapShot!!.documents){
+                    val image = doc.getString("image")!!
+                    val name = doc.getString("name")!!
+                    val category = Category(image,name)
+                    categories.add(category)
+                    adapter.notifyItemInserted(categories.size - 1)
+                }
+            }
     }
 
     private fun prepareFavorites(intent: Intent) : Boolean {

@@ -8,7 +8,7 @@ class Database(private val context:Context, )
     : SQLiteOpenHelper(context, DATABASE_NAME,null, DATABASE_VERSION) {
         companion object {
             const val DATABASE_NAME = "favoriteQuotes.db"
-            const val DATABASE_VERSION = 1
+            const val DATABASE_VERSION = 2
 
             // Favorite table
             const val FAVORITE_TABLE_NAME = "favoriteQuotes"

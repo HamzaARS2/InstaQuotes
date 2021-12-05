@@ -7,9 +7,8 @@
 <!--        app:showAsAction="never"/>-->
 
 
-
     <item android:id="@+id/page_menu_item_wallpaper"
-        android:title="Set as Wallpaper"
+        android:title="Set as wallpaper"
         app:showAsAction="never"/>
 
     <item android:id="@+id/page_menu_item_copy"
@@ -23,7 +22,7 @@
         app:showAsAction="always"/>
 
 <!--    <item android:id="@+id/page_menu_download_item"-->
-<!--        android:title="Download Image"-->
+<!--        android:title="Download image"-->
 <!--        app:showAsAction="never"-->
 <!--        android:icon="@drawable/ic_download" />-->
 </menu>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -22,7 +23,6 @@ import java.lang.Exception
 import kotlin.collections.ArrayList
 
 class MainAdapter(
-    val categoryList:ArrayList<Category>,
     val mContext: MainActivity,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -32,6 +32,7 @@ class MainAdapter(
 
     private val quotes = ArrayList<Quote>()
     private val recentQuotes = ArrayList<Quote>()
+    private val categoryList = ArrayList<Category>()
 
     private lateinit var quotesAdapter:QuotesAdapter
     private lateinit var categoryAdapter:CategoryAdapter
@@ -85,6 +86,8 @@ class MainAdapter(
                 layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
                 hasFixedSize()
             }
+            
+            loadCategories(categoryList,categoryAdapter)
 
 
         } else {
@@ -136,6 +139,26 @@ class MainAdapter(
                 }
 
             })
+    }
+
+    private fun loadCategories(categories:ArrayList<Category>, adapter: CategoryAdapter){
+        val mCategoryColl = fireStore.collection("categories")
+        mCategoryColl
+            .orderBy("name",Query.Direction.ASCENDING)
+            .addSnapshotListener(mContext) { snapShot, error ->
+                if (error != null){
+                    Toast.makeText(mContext, "Error :${error.message}", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
+                }
+
+                for (doc in snapShot!!.documents){
+                    val image = doc.getString("image")!!
+                    val name = doc.getString("name")!!
+                    val category = Category(image,name)
+                    categories.add(category)
+                    adapter.notifyItemInserted(categories.size - 1)
+                }
+            }
     }
 
 

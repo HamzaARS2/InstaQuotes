@@ -34,10 +34,6 @@ class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:Quot
 
     override fun getItemCount(): Int = data.size
 
-    fun addQuote(quote: Quote){
-        data.add(quote)
-        notifyItemInserted(data.size -1)
-    }
 
     inner class FeaturedQuotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener{
         val quote:TextView

@@ -90,7 +90,6 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
 
         mainAdapter = MainAdapter(
-            categoryList = getCategories(),
             mContext = this@MainActivity
         )
         mainRecyclerView.apply {
@@ -193,13 +192,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
     private fun getCategories(): ArrayList<Category> {
         return arrayListOf(
-            Category(R.drawable.age_circle, "Age", getQuotes()),
-            Category(R.drawable.alone_circle, "Alone", getQuotes()),
-            Category(R.drawable.angry_circle, "Angry", getQuotes()),
-            Category(R.drawable.family_circle, "Family", getQuotes()),
-            Category(R.drawable.friendship_circle, "Friendship", getQuotes()),
-            Category(R.drawable.funny_circle, "Funny", getQuotes()),
-            Category(R.drawable.life_circle, "Life", getQuotes())
+            Category("R.drawable.age_circle", "Age", getQuotes()),
         )
     }
 
