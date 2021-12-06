@@ -3,7 +3,6 @@
     package="com.reddevx.thenewquotes">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
@@ -11,12 +10,12 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/AppName"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TheNewQuotes">
         <activity
-            android:name=".ui.SplashScreenActivity"
+            android:name="com.reddevx.thenewquotes.ui.SplashScreenActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -26,27 +25,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.SearchActivity"
+            android:name="com.reddevx.thenewquotes.ui.SearchActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.NotificationsActivity"
+            android:name="com.reddevx.thenewquotes.ui.NotificationsActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name="com.reddevx.thenewquotes.ui.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.CategoryQuotesActivity"
+            android:name="com.reddevx.thenewquotes.ui.CategoryQuotesActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.FeaturedQuotesActivity"
+            android:name="com.reddevx.thenewquotes.ui.FeaturedQuotesActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.reddevx.thenewquotes.ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
         </activity>

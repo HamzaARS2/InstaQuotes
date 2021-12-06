@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.database.Database
 import com.reddevx.thenewquotes.database.DatabaseManager
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
@@ -203,7 +202,7 @@ open class RecentQuotesAdapter(
                 val quoteToShare = recentQuotesList[position].quoteText
                 putExtra(
                     Intent.EXTRA_TEXT,
-                    "${quoteToShare} \n https://play.google.com/store/apps/details?id=com.rm.instaquotes"
+                    "${quoteToShare} \n https://play.google.com/store/apps/details?id=${context.packageName}"
                 )
             }
             startActivity(context,Intent.createChooser(intent,"Install App!"),null)

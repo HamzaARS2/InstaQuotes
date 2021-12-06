@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.reddevx.thenewquotes.R
 

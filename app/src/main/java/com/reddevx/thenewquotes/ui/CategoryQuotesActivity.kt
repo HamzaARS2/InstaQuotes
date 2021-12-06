@@ -9,12 +9,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.*
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.adapters.CategoryAdapter
@@ -24,9 +21,6 @@ import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteListener {
 
@@ -41,10 +35,11 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteLi
     private val fireStore = FirebaseFirestore.getInstance()
 
     companion object{
-        private lateinit var mListener:FavoriteListener
+        private var mListener:FavoriteListener? = null
         fun setOnFavoriteClickListener(listener: FavoriteListener){
             mListener = listener
         }
+
     }
 
 
@@ -62,7 +57,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteLi
         if (intent != null) {
             prepareData()
         }
-        FeaturedQuotesActivity.setOnFavoriteClickListener(this)
+        FeaturedQuotesActivity.setOnFavoriteSecondClickListener(this)
     }
 
     private fun loadAllQuotes(mCategory:String){

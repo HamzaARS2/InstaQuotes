@@ -6,4 +6,8 @@
     <string name="close">Close</string>
     <string name="splash_text">InstaQuotes App! Huge collection of motivational quotes to make you humble and dreaming big.</string>
     <string name="night_mode">Night mode</string>
+    <string name="turn_on_off_notification">Turn on/off notification</string>
+    <string name="notification">Notification</string>
+    <string name="quoteTest">When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune.</string>
+    <string name="AppName">InstaQuotes</string>
 </resources>

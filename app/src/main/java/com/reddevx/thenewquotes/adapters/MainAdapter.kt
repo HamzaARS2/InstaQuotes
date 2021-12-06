@@ -5,22 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.EventListener
 import com.reddevx.thenewquotes.ui.MainActivity
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
-import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
-import kotlin.Exception
 
 import kotlin.collections.ArrayList
 

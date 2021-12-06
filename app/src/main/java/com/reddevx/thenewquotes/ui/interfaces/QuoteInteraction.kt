@@ -1,6 +1,5 @@
 package com.reddevx.thenewquotes.ui.interfaces
 
-import android.view.View
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
 

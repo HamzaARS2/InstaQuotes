@@ -24,7 +24,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.firestore.*
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.adapters.MainAdapter
-import com.reddevx.thenewquotes.database.DatabaseManager
 import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
@@ -82,8 +81,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         mainRecyclerView = findViewById(R.id.main_recycler_view)
         mainProgessBar = findViewById(R.id.main_progress_bar)
 
-        FeaturedQuotesActivity.setOnFavoriteClickListener(this)
-        CategoryQuotesActivity.setOnFavoriteClickListener(this)
+
         navigationView.setNavigationItemSelectedListener(this)
         refreshLayout.setOnRefreshListener(this)
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
@@ -102,10 +100,13 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             hasFixedSize()
 
         }
+    }
 
-
-
-
+    override fun onResume() {
+        super.onResume()
+        FeaturedQuotesActivity.setOnFavoriteClickListener(this)
+        CategoryQuotesActivity.setOnFavoriteClickListener(this)
+        SearchActivity.setOnFavoriteSearchClickListener(this)
     }
 
 
@@ -206,7 +207,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
                     type = "text/plain"
                     putExtra(
                         Intent.EXTRA_TEXT,
-                        " Install App from:\n https://play.google.com/store/apps/details?id=com.rm.instaquotes"
+                        " Install App from:\n https://play.google.com/store/apps/details?id=$packageName"
                     )
                 }
                 drawerLayout.closeDrawer(GravityCompat.START)
@@ -215,7 +216,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
             }
             R.id.nav_rate_menu_item -> {
-                val uri = Uri.parse("https://play.google.com/store/apps/details?id=com.rm.instaquotes")
+                val uri = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
                 val intent = Intent(Intent.ACTION_VIEW,uri)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 try {
@@ -261,6 +262,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     }
 
     override fun onFavoriteClick() {
+        Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
         mainAdapter.notifyChanges()
     }
 

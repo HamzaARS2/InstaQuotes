@@ -26,7 +26,7 @@
         android:fontFamily="@font/happy_monkey"
         android:gravity="bottom"
         android:padding="2dp"
-        android:text="InstaQuotes"
+        android:text="@string/AppName"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"

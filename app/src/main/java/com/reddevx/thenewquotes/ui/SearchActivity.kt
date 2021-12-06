@@ -3,12 +3,9 @@ package com.reddevx.thenewquotes.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +27,14 @@ class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
 
     val fireStore = FirebaseFirestore.getInstance()
 
+    companion object {
+        private var searchListener:FavoriteListener? = null
+
+        fun setOnFavoriteSearchClickListener(listener: FavoriteListener){
+            searchListener = listener
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -39,7 +44,7 @@ class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
         filterableQuotes = ArrayList()
         allQuotes = ArrayList()
 
-        searchAdapter = SearchQuotesAdapter(filterableQuotes,allQuotes,context = this)
+        searchAdapter = SearchQuotesAdapter(filterableQuotes,allQuotes,listener = searchListener,context = this)
         searchRv.apply {
             adapter = searchAdapter
             layoutManager = LinearLayoutManager(this@SearchActivity,LinearLayoutManager.VERTICAL,false)
@@ -47,7 +52,7 @@ class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
         searchToolbar.title = ""
         setSupportActionBar(searchToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        FeaturedQuotesActivity.setOnFavoriteClickListener(this)
+        FeaturedQuotesActivity.setOnFavoriteThirdClickListener(this)
         loadAllQuotes()
     }
 
@@ -102,53 +107,6 @@ class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
             }
     }
 
-
-    private fun getRecentQuotes(): ArrayList<Quote> {
-        return arrayListOf(
-            Quote(
-                "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune.",
-                "Age",
-                false
-            ),
-            Quote(
-                "https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/235986/pexels-photo-235986.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/235615/pexels-photo-235615.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Alone"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/2307562/pexels-photo-2307562.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Friendship"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/236214/pexels-photo-236214.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Age"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune.",
-                "Age",
-                false
-            )
-        )
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

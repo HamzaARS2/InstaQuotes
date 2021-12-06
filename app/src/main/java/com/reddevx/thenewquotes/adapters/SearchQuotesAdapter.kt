@@ -4,9 +4,13 @@ import android.widget.Filter
 import android.widget.Filterable
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.SearchActivity
+import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
 
-class SearchQuotesAdapter(private val quotes:ArrayList<Quote>,private val allQuotes: ArrayList<Quote>, val context: SearchActivity)
-    : RecentQuotesAdapter(recentQuotesList = quotes ,listener = context,favListener = context,context = context)
+class SearchQuotesAdapter(private val quotes:ArrayList<Quote>,
+                          private val allQuotes: ArrayList<Quote>,
+                          val listener: FavoriteListener? = null,
+                          val context: SearchActivity)
+    : RecentQuotesAdapter(recentQuotesList = quotes ,listener = context,favListener = listener,context = context)
     , Filterable {
 
 

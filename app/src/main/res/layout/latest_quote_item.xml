@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:padding="5dp"
-                android:text="When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune."
+                android:text="@string/quoteTest"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:textStyle="italic" />

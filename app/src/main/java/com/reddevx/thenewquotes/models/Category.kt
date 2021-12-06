@@ -1,7 +1,6 @@
 package com.reddevx.thenewquotes.models
 
 import android.os.Parcelable
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
