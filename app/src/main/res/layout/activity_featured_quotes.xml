@@ -13,6 +13,7 @@
         android:layout_height="?actionBarSize"
         android:background="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="#343a40">
@@ -21,11 +22,12 @@
             android:id="@+id/featured_toolbar_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
+            android:fontFamily="sans-serif"
             android:text="Details"
             android:textColor="#000000"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:textSize="20sp"
             tools:layout_editor_absoluteX="157dp"
             tools:layout_editor_absoluteY="18dp" />
 
@@ -34,22 +36,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="sans-serif"
             android:text="1 / 14"
-            android:textSize="18sp"
             android:textColor="#000000"
+            android:textSize="18sp"
             android:textStyle="bold"
-            />
+            tools:layout_editor_absoluteX="182dp"
+            tools:layout_editor_absoluteY="16dp" />
 
-        <CheckBox
-            android:id="@+id/page_favorite_item"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:paddingRight="2dp"
-            android:button="@drawable/featured_favorite_box_selector"
-            android:checked="false"
-            app:useMaterialThemeColors="false"
-            />
+            <CheckBox
+                android:id="@+id/page_favorite_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:button="@drawable/featured_favorite_box_selector"
+                android:checked="false"
+                android:paddingEnd="2dp"
+                android:layout_marginStart="5dp"
+                android:textSize="16sp"
+                app:useMaterialThemeColors="false"
+                tools:layout_editor_absoluteX="386dp" />
+
+
 
     </androidx.appcompat.widget.Toolbar>
 

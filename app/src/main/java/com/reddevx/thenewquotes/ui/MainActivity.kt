@@ -37,10 +37,8 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     object Constants {
         const val QUOTE_LIST_KEY = "quote_list"
         const val QUOTE_POSITION_KEY = "quote_position"
-        const val CATEGORIES_KEY = "categories_491"
         const val CATEGORY_KEY = "category_quotes_key"
         const val QUOTES_TYPE_KEY = " which_list_will_display"
-        const val FAVORITES_KEY = "list_of_favorites"
 
         const val FROM_SECTION_ONE = "1"
         const val FROM_SECTION_TWO = "2"
@@ -132,7 +130,6 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         when (item.itemId) {
             R.id.notification_item -> {
                 val intent = Intent(this, NotificationsActivity::class.java)
-                //intent.putParcelableArrayListExtra("noti_data", arrayListOf())//send list of notifications
                 startActivity(intent)
             }
             R.id.search_item -> {
@@ -141,106 +138,6 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun getQuotes(): ArrayList<Quote> {
-        return arrayListOf(
-            Quote(
-                "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune.",
-                "Age",
-                false
-            ),
-            Quote(
-                "https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/235986/pexels-photo-235986.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/235615/pexels-photo-235615.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Alone"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/2307562/pexels-photo-2307562.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Friendship"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/236214/pexels-photo-236214.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Age"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune.",
-                "Age",
-                false
-            )
-        )
-    }
-
-    private fun getCategories(): ArrayList<Category> {
-        return arrayListOf(
-            Category("R.drawable.age_circle", "Age", getQuotes()),
-        )
-    }
-
-    private fun getRecentQuotes(): ArrayList<Quote> {
-        return arrayListOf(
-            Quote(
-                "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune.",
-                "Age",
-                false
-            ),
-            Quote(
-                "https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/235986/pexels-photo-235986.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/235615/pexels-photo-235615.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Funny"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Alone"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/2307562/pexels-photo-2307562.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Friendship"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/236214/pexels-photo-236214.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "Can't you see that I'm only advising you to beg yourself not to be so dumb?",
-                "Age"
-            ),
-            Quote(
-                "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                "When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune.",
-                "Age",
-                false
-            )
-        )
     }
 
 
@@ -283,9 +180,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
             }
             R.id.nav_categories_menu_item -> {
-
                 val intent = Intent(this, CategoryQuotesActivity::class.java)
-                intent.putParcelableArrayListExtra(Constants.CATEGORIES_KEY, getCategories())
                 intent.putExtra(Constants.QUOTES_TYPE_KEY, Constants.FROM_NAV_CATEGORIES)
                 startActivity(intent)
             }
@@ -330,8 +225,6 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
         return true
     }
-
-
 
     private fun showDialog(){
         val mDialog: AlertDialog

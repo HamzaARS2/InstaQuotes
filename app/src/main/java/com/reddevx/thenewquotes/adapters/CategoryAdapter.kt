@@ -12,25 +12,36 @@ import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
 import de.hdodenhof.circleimageview.CircleImageView
 
 class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:QuoteInteraction,private val viewType:Int) :
-    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val SECTION_TWO_TYPE = 0
         const val NAV_CATEGORIES_TYPE = 1
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == SECTION_TWO_TYPE)
-        return CategoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.section_two_categories_item,parent,false))
+        return SectionTwoCategoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.section_two_categories_item,parent,false))
         else
             return CategoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.categories_item,parent,false))
     }
 
-    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        holder.apply {
-            Glide.with(itemView).load(categoryList[position].categoryImage)
-                .into(holder.categoryImage)
-            categoryName.text = categoryList[position].categoryName
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is SectionTwoCategoryViewHolder) {
+            holder.apply {
+                Glide.with(itemView)
+                    .load(categoryList[position].categoryImage)
+                    .into(holder.categoryImage)
+                categoryName.text = categoryList[position].categoryName
+            }
+        } else {
+            val holder = holder as CategoryViewHolder
+            holder.apply {
+                Glide.with(itemView)
+                    .load(categoryList[position].categoryImage)
+                    .into(holder.categoryImage)
+                categoryName.text = categoryList[position].categoryName
+            }
         }
     }
 
@@ -39,6 +50,24 @@ class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:
         if (viewType == SECTION_TWO_TYPE)
             return SECTION_TWO_TYPE
         return NAV_CATEGORIES_TYPE
+    }
+
+    inner class SectionTwoCategoryViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener {
+
+        val categoryImage:CircleImageView
+        val categoryName:TextView
+
+        init {
+            categoryImage = itemView.findViewById(R.id.section_two_categoryImage)
+            categoryName = itemView.findViewById(R.id.categoryName)
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+                listener.onCategoryClick(categoryList[bindingAdapterPosition],bindingAdapterPosition)
+        }
+
     }
 
     inner class CategoryViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener {

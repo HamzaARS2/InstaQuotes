@@ -13,8 +13,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.*
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.*
 import com.reddevx.thenewquotes.R
 import com.reddevx.thenewquotes.adapters.CategoryAdapter
 import com.reddevx.thenewquotes.adapters.RecentQuotesAdapter
@@ -23,6 +24,9 @@ import com.reddevx.thenewquotes.models.Category
 import com.reddevx.thenewquotes.models.Quote
 import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
 import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
 
@@ -137,11 +141,12 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
 
     private fun prepareRecentQuotes(intent: Intent) : Boolean {
         if (intent.getStringExtra(MainActivity.Constants.QUOTES_TYPE_KEY).equals(MainActivity.Constants.FROM_SECTION_THREE)){
-            val recentQuotes:ArrayList<Quote> = intent.getParcelableArrayListExtra(MainActivity.Constants.QUOTE_LIST_KEY)!!
+            val recentQuotes:ArrayList<Quote> = arrayListOf()
             quotesAdapter = RecentQuotesAdapter(recentQuotes,this, mListener,context = this)
             toolbarTv.text = "Recent Quotes"
             toolbarDelBtn.visibility = View.GONE
             buildRecyclerView(StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL))
+            loadRecentQuotes(recentQuotes,quotesAdapter)
             return true
         }
         return false
@@ -163,18 +168,16 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
         val mCategoryColl = fireStore.collection("categories")
         mCategoryColl
             .orderBy("name",Query.Direction.ASCENDING)
-            .addSnapshotListener(this) { snapShot, error ->
-                if (error != null){
-                    Toast.makeText(this, "Error :${error.message}", Toast.LENGTH_SHORT).show()
-                    return@addSnapshotListener
-                }
-
-                for (doc in snapShot!!.documents){
-                    val image = doc.getString("image")!!
-                    val name = doc.getString("name")!!
-                    val category = Category(image,name)
-                    categories.add(category)
-                    adapter.notifyItemInserted(categories.size - 1)
+            .get()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful){
+                    for (doc in task.result!!.documents) {
+                        val image = doc.getString("image")!!
+                        val name = doc.getString("name")!!
+                        val category = Category(image, name)
+                        categories.add(category)
+                        adapter.notifyItemInserted(categories.size - 1)
+                    }
                 }
             }
     }
@@ -264,6 +267,28 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
             }
         mDialog = builder.create()
         mDialog.show()
+
+    }
+
+    private fun loadRecentQuotes(recentQuotes:ArrayList<Quote>,recentQuotesAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>){
+        val mRecentColl = fireStore.collection("recent")
+        mRecentColl
+            .orderBy("date",Query.Direction.DESCENDING)
+            .get()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful){
+                    for (doc in task.result!!.documents){
+                        val imageUrl = doc.getString(MainActivity.Constants.FIRE_STORE_IMAGE_KEY)!!
+                        val quoteText = doc.getString(MainActivity.Constants.FIRE_STORE_QUOTE_KEY)!!
+                        val category = doc.getString(MainActivity.Constants.FIRE_STORE_CATEGORY_KEY)!!
+                        val quote = Quote(imageUrl,quoteText,category)
+                        recentQuotes.add(quote)
+                        recentQuotesAdapter.notifyItemInserted(recentQuotes.size - 1)
+                    }
+                }else
+                    Log.w("Listen failed",task.exception?.message.toString())
+                 }
+
 
     }
 
