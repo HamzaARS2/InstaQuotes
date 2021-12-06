@@ -9,6 +9,8 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -31,7 +33,7 @@ import kotlinx.coroutines.*
 
 
 class MainActivity : AppCompatActivity(), QuoteInteraction,
-    NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener ,FavoriteListener{
+    NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener ,FavoriteListener,MainAdapter.ProgressBarListener{
 
 
     object Constants {
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
     private lateinit var mainAdapter: MainAdapter
     private lateinit var mainRecyclerView: RecyclerView
+    private lateinit var mainProgessBar:ProgressBar
 
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
@@ -77,8 +80,10 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         navigationView = findViewById(R.id.navigation_view)
         refreshLayout = findViewById(R.id.swipe_refresh_layout)
         mainRecyclerView = findViewById(R.id.main_recycler_view)
+        mainProgessBar = findViewById(R.id.main_progress_bar)
 
-
+        FeaturedQuotesActivity.setOnFavoriteClickListener(this)
+        CategoryQuotesActivity.setOnFavoriteClickListener(this)
         navigationView.setNavigationItemSelectedListener(this)
         refreshLayout.setOnRefreshListener(this)
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
@@ -98,7 +103,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
         }
 
-        CategoryQuotesActivity.setOnFavoriteClickListener(this)
+
 
 
     }
@@ -257,6 +262,11 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
     override fun onFavoriteClick() {
         mainAdapter.notifyChanges()
+    }
+
+    override fun onProgressFinished() {
+        mainProgessBar.visibility = View.GONE
+        mainRecyclerView.visibility = View.VISIBLE
     }
 
 

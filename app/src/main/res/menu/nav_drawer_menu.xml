@@ -20,9 +20,9 @@
 
         <menu>
 
-            <item android:id="@+id/nav_privacy_menu_item"
-                android:title="Privacy Policy"
-                android:icon="@drawable/ic_privacy_policy"/>
+<!--            <item android:id="@+id/nav_privacy_menu_item"-->
+<!--                android:title="Privacy Policy"-->
+<!--                android:icon="@drawable/ic_privacy_policy"/>-->
             <item android:id="@+id/nav_share_menu_item"
                 android:title="Share"
                 android:icon="@drawable/ic_share_app"/>

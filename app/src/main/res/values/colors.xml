@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="black_25">#5C5C5C</color>
+
+       <!--  Dark mode colors -->
+    <color name="primary">#8A000000</color>
+    <color name="colorPrimaryVariant">#706D6D</color>
+    <color name="black_75">#222222</color>
+    <color name="black_85">#151515</color>
 </resources>

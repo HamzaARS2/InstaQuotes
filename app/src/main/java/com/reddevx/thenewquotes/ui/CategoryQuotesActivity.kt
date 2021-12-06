@@ -28,7 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
+class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteListener {
 
 
     private lateinit var quotesRv: RecyclerView
@@ -62,6 +62,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
         if (intent != null) {
             prepareData()
         }
+        FeaturedQuotesActivity.setOnFavoriteClickListener(this)
     }
 
     private fun loadAllQuotes(mCategory:String){
@@ -145,7 +146,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
             quotesAdapter = RecentQuotesAdapter(recentQuotes,this, mListener,context = this)
             toolbarTv.text = "Recent Quotes"
             toolbarDelBtn.visibility = View.GONE
-            buildRecyclerView(StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL))
+            buildRecyclerView(GridLayoutManager(this,2))
             loadRecentQuotes(recentQuotes,quotesAdapter)
             return true
         }
@@ -292,6 +293,9 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction {
 
     }
 
+    override fun onFavoriteClick() {
+        quotesAdapter.notifyChanges()
+    }
 
 
 }

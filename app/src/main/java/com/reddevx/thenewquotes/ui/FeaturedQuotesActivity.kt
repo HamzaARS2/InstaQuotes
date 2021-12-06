@@ -134,96 +134,14 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         return result
     }
 
-    private fun saveImage() {
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),1)
-
-        var fileOutputStream:FileOutputStream? = null
-        val file = getDir()
-        if (!file.exists() && !file.mkdir()){
-            file.mkdirs()
-        }
-
-        val simpleDateFormat = SimpleDateFormat("yyyymmsshhmmss")
-        val date = simpleDateFormat.format(Date())
-        val name = "QuoteIMG$date.jpg"
-        val fileName = "${file.absolutePath}/$name"
-        val newFile = File(fileName)
-
-        GlobalScope.launch {
-            val bitmap = downloadImage(quoteList[quotePosition].imageUrl)
-            GlobalScope.launch(Dispatchers.Main) {
-                try {
-                    if (bitmap != null){
-                        fileOutputStream = FileOutputStream(newFile)
-                        bitmap.compress(Bitmap.CompressFormat.JPEG,100,fileOutputStream)
-                        showToast("Image saved successfully")
-                    }else {
-                        showToast("Something went wrong! please try again")
-                    }
-                    fileOutputStream?.flush()
-                    fileOutputStream?.close()
-                }catch (e:IOException){
-                    showToast("Error: ${e.message}")
-                }
-                updateGallery(file)
-            }
-
-        }
 
 
-
-
-
-    }
-
-    private fun updateGallery(file: File){
-        MediaScannerConnection.scanFile(this, arrayOf(file.toString()),null,null)
-    }
-
-    private fun getDir() : File {
-        val file: File? = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-        return File(file,"QuoteImage")
-    }
-
-//    private fun getBitmap(imageUrl:String) : Bitmap? {
-//        try {
-//            val url = URL(imageUrl)
-//            val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-//            return bitmap
-//        } catch (e:IOException){
-//            Toast.makeText(this, "Error: $e", Toast.LENGTH_SHORT).show()
-//        }
-//        return null
-//    }
-//
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.quote_page_menu,menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun getBitmap(imageUrl:String) : Bitmap? {
-        val url = URL(imageUrl)
-        val urlConnection = url.openConnection() as HttpURLConnection
-        var bitmap:Bitmap? = null
-        try {
-            val inputStream = BufferedInputStream(urlConnection.inputStream)
-            bitmap = BitmapFactory.decodeStream(inputStream)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        finally {
-            urlConnection.disconnect()
-        }
-        return bitmap
-    }
 
-    private suspend fun downloadImage(imageUrl: String): Bitmap? {
-        val result: Deferred<Bitmap?> = GlobalScope.async {
-            getBitmap(imageUrl)
-        }
-        val bitmap = result.await()
-        return bitmap
-    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

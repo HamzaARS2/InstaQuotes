@@ -26,6 +26,7 @@ import kotlin.collections.ArrayList
 
 class MainAdapter(
     val mContext: MainActivity,
+    private val progressListener:ProgressBarListener = mContext
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val QUOTE_VIEW_TYPE: Int = 0
@@ -40,6 +41,7 @@ class MainAdapter(
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var recentQuotesAdapter: RecentQuotesAdapter
     private val fireStore = FirebaseFirestore.getInstance()
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -123,19 +125,25 @@ class MainAdapter(
             .get()
             .addOnCompleteListener(mContext) { task ->
                 if (task.isSuccessful) {
+                    progressListener.onProgressFinished()
                     for (doc in task.result!!.documents) {
                         val imageUrl = doc.getString(MainActivity.Constants.FIRE_STORE_IMAGE_KEY)!!
                         val quoteText = doc.getString(MainActivity.Constants.FIRE_STORE_QUOTE_KEY)!!
-                        val category =
-                            doc.getString(MainActivity.Constants.FIRE_STORE_CATEGORY_KEY)!!
+                        val category = doc.getString(MainActivity.Constants.FIRE_STORE_CATEGORY_KEY)!!
                         val quote = Quote(imageUrl, quoteText, category)
                         quotes.add(quote)
                         quotesAdapter.notifyItemInserted(quotes.size - 1)
+
                     }
-                } else {
-                    Log.e("ErrorRetrievingData", task.exception?.message.toString())
+
+                }else{
+                    Log.e("Failed!",task.exception?.message.toString())
                 }
+
+
             }
+
+
     }
 
     private fun loadCategories() {
@@ -153,6 +161,7 @@ class MainAdapter(
                         categoryAdapter.notifyItemInserted(categoryList.size - 1)
                     }
                 }
+
                 else
                     Log.e("Retrieve data failed!", task.exception?.message.toString())
             }
@@ -179,8 +188,10 @@ class MainAdapter(
                         recentQuotes.add(quote)
                         recentQuotesAdapter.notifyItemInserted(recentQuotes.size - 1)
                     }
-                } else
+                } else {
+                    //progressListener.onProgressFinished()
                     Log.e("Retrieve data failed!", task.exception?.message.toString())
+                }
             }
 
 
@@ -253,6 +264,10 @@ class MainAdapter(
                 )
             }
         }
+    }
+
+    interface ProgressBarListener{
+        fun onProgressFinished()
     }
 
 

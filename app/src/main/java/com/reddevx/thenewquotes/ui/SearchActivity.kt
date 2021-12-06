@@ -48,7 +48,6 @@ class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
         setSupportActionBar(searchToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         FeaturedQuotesActivity.setOnFavoriteClickListener(this)
-
         loadAllQuotes()
     }
 

@@ -37,7 +37,7 @@ class SearchQuotesAdapter(private val quotes:ArrayList<Quote>,private val allQuo
         }
     }
 
-    fun notifyChanges(){
+    override fun notifyChanges(){
         notifyItemRangeChanged(0,quotes.size)
     }
 

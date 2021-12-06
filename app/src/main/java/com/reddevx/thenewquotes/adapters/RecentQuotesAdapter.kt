@@ -78,6 +78,10 @@ open class RecentQuotesAdapter(
 
     private fun getCurrentQuote(position: Int) :Quote = recentQuotesList[position]
 
+    open fun notifyChanges(){
+        notifyItemRangeChanged(0,recentQuotesList.size)
+    }
+
 
 
 

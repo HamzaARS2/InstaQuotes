@@ -4,4 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="splash_text">InstaQuotes App! Huge collection of motivational quotes to make you humble and dreaming big.</string>
+    <string name="night_mode">Night mode</string>
 </resources>
