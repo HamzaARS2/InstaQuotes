@@ -2,14 +2,12 @@ package com.reddevx.instaquotes.ui
 
 import android.annotation.SuppressLint
 import android.app.WallpaperManager
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +20,12 @@ import androidx.viewpager2.widget.ViewPager2
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.reddevx.instaquotes.R
 import com.reddevx.instaquotes.adapters.QuotesPagerAdapter
 import com.reddevx.instaquotes.database.DatabaseManager
@@ -42,9 +46,18 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
 
     private val db = DatabaseManager.invoke(this)!!
 
+    private var mInterstitialAd:InterstitialAd? = null
+
     private var quotePosition: Int = -1
 
+    private lateinit var preferences:SharedPreferences
+    private lateinit var editor:SharedPreferences.Editor
+
+
+
     companion object {
+         const val AD_INTERSTITIAL_SP_NAME = "interstitialADState"
+        var AD_COUNTER = 0
         private var mListener: FavoriteListener? = null
         private var sListener: FavoriteListener? = null
         private var tListener: FavoriteListener? = null
@@ -115,10 +128,48 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         })
 
         heartCheckBox.setOnClickListener(this)
+        preferences = getSharedPreferences(AD_INTERSTITIAL_SP_NAME, MODE_PRIVATE)
+        editor = preferences.edit()
+        setInterstitialAd()
+
 
 
     }
 
+    private fun setInterstitialAd(){
+
+        if (AD_COUNTER == 5){
+            val adRequest = AdRequest.Builder().build()
+            InterstitialAd.load(this,"ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d("LoadAdsFailed", adError.message)
+                    mInterstitialAd = null
+                }
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d("LoadAdsFailed", "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                    mInterstitialAd!!.show(this@FeaturedQuotesActivity)
+                }
+            })
+            mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    Log.d("TAG", "Ad was dismissed.")
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                    Log.d("TAG", "Ad failed to show.")
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    Log.d("TAG", "Ad showed fullscreen content.")
+                    mInterstitialAd = null
+                }
+            }
+            AD_COUNTER = 0
+        } else{
+            AD_COUNTER = AD_COUNTER.inc()
+        }
+    }
     private fun showToast(content: String) {
         Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
     }
@@ -226,6 +277,14 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         sListener?.onFavoriteClick()
         tListener?.onFavoriteClick()
         sListener?.onFavoriteRemoved(quotePosition)
+    }
+
+    private fun showInterstitialAd(){
+        if (mInterstitialAd != null) {
+            mInterstitialAd?.show(this)
+        } else {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.")
+        }
     }
 
 

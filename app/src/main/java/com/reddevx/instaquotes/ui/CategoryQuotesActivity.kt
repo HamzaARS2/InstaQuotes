@@ -83,7 +83,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteLi
             .whereEqualTo("category",mCategory)
             .get()
             .addOnSuccessListener(this) { snapShot ->
-                for (doc in snapShot!!.documents) {
+                for (doc in snapShot.documents) {
                     val imageUrl = doc.getString(MainActivity.Constants.FIRE_STORE_IMAGE_KEY)!!
                     val quoteText = doc.getString(MainActivity.Constants.FIRE_STORE_QUOTE_KEY)!!
                     val category = doc.getString(MainActivity.Constants.FIRE_STORE_CATEGORY_KEY)!!
@@ -274,7 +274,7 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteLi
             .get()
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful){
-                    for (doc in task.result!!.documents){
+                    for (doc in task.result.documents){
                         val imageUrl = doc.getString(MainActivity.Constants.FIRE_STORE_IMAGE_KEY)!!
                         val quoteText = doc.getString(MainActivity.Constants.FIRE_STORE_QUOTE_KEY)!!
                         val category = doc.getString(MainActivity.Constants.FIRE_STORE_CATEGORY_KEY)!!
@@ -295,7 +295,6 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteLi
 
     override fun onFavoriteRemoved(position: Int) {
         quotesAdapter.remove(position)
-        Toast.makeText(this, "pos$position", Toast.LENGTH_SHORT).show()
     }
 
 

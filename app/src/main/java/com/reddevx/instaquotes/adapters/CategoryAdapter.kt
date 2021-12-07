@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
 import com.reddevx.instaquotes.R
 import com.reddevx.instaquotes.models.Category
 import com.reddevx.instaquotes.ui.interfaces.QuoteInteraction
@@ -26,6 +27,7 @@ class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:
             return CategoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.categories_item,parent,false))
     }
 
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is SectionTwoCategoryViewHolder) {
             holder.apply {
@@ -35,11 +37,11 @@ class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:
                 categoryName.text = categoryList[position].categoryName
             }
         } else {
-            val holder = holder as CategoryViewHolder
-            holder.apply {
+            val cHolder = holder as CategoryViewHolder
+            cHolder.apply {
                 Glide.with(itemView)
                     .load(categoryList[position].categoryImage)
-                    .into(holder.categoryImage)
+                    .into(cHolder.categoryImage)
                 categoryName.text = categoryList[position].categoryName
             }
         }

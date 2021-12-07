@@ -2,6 +2,7 @@ package com.reddevx.instaquotes.ui
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +20,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+
 
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.firestore.*
@@ -64,6 +68,9 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     private var doubleBackPressToExit = true
 
 
+    private lateinit var sp:SharedPreferences
+    private lateinit var editor:SharedPreferences.Editor
+
 
 
 
@@ -100,6 +107,11 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             hasFixedSize()
 
         }
+
+        sp = getSharedPreferences(FeaturedQuotesActivity.AD_INTERSTITIAL_SP_NAME, MODE_PRIVATE)
+        editor = sp.edit()
+        FeaturedQuotesActivity.AD_COUNTER = sp.getInt("AdCounter",0)
+
     }
 
     override fun onResume() {
@@ -117,14 +129,18 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             finishAffinity()
             return
         }
-
         doubleBackPressToExit = false
         Toast.makeText(this, "Tap again to exit", Toast.LENGTH_SHORT).show()
         Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackPressToExit = true }, 2000)
     }
 
 
+    override fun onStop() {
+        super.onStop()
 
+        editor.putInt("AdCounter",FeaturedQuotesActivity.AD_COUNTER)
+        editor.apply()
+    }
 
 
 
