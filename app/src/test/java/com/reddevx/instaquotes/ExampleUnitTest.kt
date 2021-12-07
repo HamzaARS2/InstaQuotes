@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes
+package com.reddevx.instaquotes
 
 import org.junit.Test
 

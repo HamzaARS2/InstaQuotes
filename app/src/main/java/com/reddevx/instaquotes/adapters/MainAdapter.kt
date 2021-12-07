@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.adapters
+package com.reddevx.instaquotes.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.*
-import com.reddevx.thenewquotes.ui.MainActivity
-import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.models.Category
-import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.instaquotes.ui.MainActivity
+import com.reddevx.instaquotes.R
+import com.reddevx.instaquotes.models.Category
+import com.reddevx.instaquotes.models.Quote
 
 import kotlin.collections.ArrayList
 

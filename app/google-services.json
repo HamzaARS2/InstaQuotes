@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "42665171519",
-    "project_id": "thenewquote-28a9a",
-    "storage_bucket": "thenewquote-28a9a.appspot.com"
+    "project_number": "1071661460653",
+    "project_id": "instaquotes-35989",
+    "storage_bucket": "instaquotes-35989.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:42665171519:android:1371c0d208d7a329cb768a",
+        "mobilesdk_app_id": "1:1071661460653:android:f3dad0fa777cd942f8ea24",
         "android_client_info": {
-          "package_name": "com.reddevx.thenewquotes"
+          "package_name": "com.reddevx.instaquotes"
         }
       },
       "oauth_client": [
         {
-          "client_id": "42665171519-h7hg166p4h0q8cc14lk1ej5qua9lls3l.apps.googleusercontent.com",
+          "client_id": "1071661460653-oh3muqhe1b0ife5kkengg72mibo8diho.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBRNwIMbCfZMiUMf0y64Vm_IsmHjJTZoZQ"
+          "current_key": "AIzaSyCEylcgjuSl0W0yNdafgPnA-4rDYzAWONw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "42665171519-h7hg166p4h0q8cc14lk1ej5qua9lls3l.apps.googleusercontent.com",
+              "client_id": "1071661460653-oh3muqhe1b0ife5kkengg72mibo8diho.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

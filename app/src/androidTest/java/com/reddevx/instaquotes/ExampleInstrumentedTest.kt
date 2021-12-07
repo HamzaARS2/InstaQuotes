@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes
+package com.reddevx.instaquotes
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

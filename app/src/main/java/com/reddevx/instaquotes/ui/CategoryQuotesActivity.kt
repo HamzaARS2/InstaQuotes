@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.ui
+package com.reddevx.instaquotes.ui
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -9,18 +9,19 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.*
 import com.google.firebase.firestore.*
-import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.adapters.CategoryAdapter
-import com.reddevx.thenewquotes.adapters.RecentQuotesAdapter
-import com.reddevx.thenewquotes.database.DatabaseManager
-import com.reddevx.thenewquotes.models.Category
-import com.reddevx.thenewquotes.models.Quote
-import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
-import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
+import com.reddevx.instaquotes.R
+import com.reddevx.instaquotes.adapters.CategoryAdapter
+import com.reddevx.instaquotes.adapters.RecentQuotesAdapter
+import com.reddevx.instaquotes.database.DatabaseManager
+import com.reddevx.instaquotes.models.Category
+import com.reddevx.instaquotes.models.Quote
+import com.reddevx.instaquotes.ui.interfaces.FavoriteListener
+import com.reddevx.instaquotes.ui.interfaces.QuoteInteraction
 
 class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteListener {
 
@@ -290,6 +291,11 @@ class CategoryQuotesActivity : AppCompatActivity(), QuoteInteraction, FavoriteLi
 
     override fun onFavoriteClick() {
         quotesAdapter.notifyChanges()
+    }
+
+    override fun onFavoriteRemoved(position: Int) {
+        quotesAdapter.remove(position)
+        Toast.makeText(this, "pos$position", Toast.LENGTH_SHORT).show()
     }
 
 

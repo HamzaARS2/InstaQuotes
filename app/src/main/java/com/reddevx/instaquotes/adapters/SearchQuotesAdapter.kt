@@ -1,10 +1,10 @@
-package com.reddevx.thenewquotes.adapters
+package com.reddevx.instaquotes.adapters
 
 import android.widget.Filter
 import android.widget.Filterable
-import com.reddevx.thenewquotes.models.Quote
-import com.reddevx.thenewquotes.ui.SearchActivity
-import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
+import com.reddevx.instaquotes.models.Quote
+import com.reddevx.instaquotes.ui.SearchActivity
+import com.reddevx.instaquotes.ui.interfaces.FavoriteListener
 
 class SearchQuotesAdapter(private val quotes:ArrayList<Quote>,
                           private val allQuotes: ArrayList<Quote>,

@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.ui
+package com.reddevx.instaquotes.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.reddevx.thenewquotes.R
+import com.reddevx.instaquotes.R
 
 class SettingsActivity : AppCompatActivity() , View.OnClickListener{
 

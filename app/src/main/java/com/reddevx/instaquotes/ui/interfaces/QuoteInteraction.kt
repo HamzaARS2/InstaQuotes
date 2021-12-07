@@ -1,7 +1,7 @@
-package com.reddevx.thenewquotes.ui.interfaces
+package com.reddevx.instaquotes.ui.interfaces
 
-import com.reddevx.thenewquotes.models.Category
-import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.instaquotes.models.Category
+import com.reddevx.instaquotes.models.Quote
 
 interface QuoteInteraction {
     fun onQuoteClick(quotes:ArrayList<Quote>, position: Int)

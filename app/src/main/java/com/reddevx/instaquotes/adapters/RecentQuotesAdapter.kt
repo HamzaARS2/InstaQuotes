@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.adapters
+package com.reddevx.instaquotes.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -10,11 +10,11 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.database.DatabaseManager
-import com.reddevx.thenewquotes.models.Quote
-import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
-import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
+import com.reddevx.instaquotes.R
+import com.reddevx.instaquotes.database.DatabaseManager
+import com.reddevx.instaquotes.models.Quote
+import com.reddevx.instaquotes.ui.interfaces.FavoriteListener
+import com.reddevx.instaquotes.ui.interfaces.QuoteInteraction
 
 open class RecentQuotesAdapter(
     private var recentQuotesList: ArrayList<Quote> = arrayListOf(),
@@ -174,8 +174,8 @@ open class RecentQuotesAdapter(
 
          private fun removeQuote(position: Int){
             val result = deleteFavorite(getCurrentQuote(position))
-                favListener?.onFavoriteClick()
             if (result) {
+                favListener?.onFavoriteClick()
                 showToast("This quote is removed from Favorite list!")
                 recentQuotesList.removeAt(position)
                 notifyItemRemoved(position)
@@ -245,6 +245,11 @@ open class RecentQuotesAdapter(
                 return true
         }
         return false
+    }
+
+    fun remove(position: Int){
+        recentQuotesList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
 

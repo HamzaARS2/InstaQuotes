@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.ui
+package com.reddevx.instaquotes.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.reddevx.thenewquotes.R
+import com.reddevx.instaquotes.R
 
 class NotificationsActivity : AppCompatActivity() {
     private lateinit var notificationsRv:RecyclerView

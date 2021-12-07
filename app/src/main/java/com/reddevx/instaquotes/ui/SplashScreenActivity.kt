@@ -1,17 +1,11 @@
-package com.reddevx.thenewquotes.ui
+package com.reddevx.instaquotes.ui
 
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AlertDialog
-import com.reddevx.thenewquotes.R
+import com.reddevx.instaquotes.R
 
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +37,7 @@ class SplashScreenActivity : AppCompatActivity() {
 //                else -> false
 //            }
 //        } else {
-//           
+//
 //        }
 //
 //    }

@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.ui
+package com.reddevx.instaquotes.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,12 +10,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.adapters.SearchQuotesAdapter
-import com.reddevx.thenewquotes.models.Category
-import com.reddevx.thenewquotes.models.Quote
-import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
-import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
+import com.reddevx.instaquotes.R
+import com.reddevx.instaquotes.adapters.SearchQuotesAdapter
+import com.reddevx.instaquotes.models.Category
+import com.reddevx.instaquotes.models.Quote
+import com.reddevx.instaquotes.ui.interfaces.FavoriteListener
+import com.reddevx.instaquotes.ui.interfaces.QuoteInteraction
 
 class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
     private lateinit var searchToolbar: androidx.appcompat.widget.Toolbar
@@ -91,7 +91,7 @@ class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
                 }
             }
             .addOnFailureListener(this
-            ) { e -> Log.e("GGGGGGG", "onFailure: $e",) }
+            ) { e -> Log.e("Listening failed!", "onFailure: $e",) }
         mRecentColl
             .get()
             .addOnSuccessListener(this) { snapShot ->
@@ -106,6 +106,8 @@ class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
                 }
             }
     }
+
+
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -135,5 +137,7 @@ class SearchActivity : AppCompatActivity(), QuoteInteraction ,FavoriteListener{
 
     override fun onFavoriteClick() {
         searchAdapter.notifyChanges()
+    }
+    override fun onFavoriteRemoved(position: Int) {
     }
 }

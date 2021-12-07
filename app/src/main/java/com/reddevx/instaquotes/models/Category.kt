@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.models
+package com.reddevx.instaquotes.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

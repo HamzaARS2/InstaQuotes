@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.adapters
+package com.reddevx.instaquotes.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.models.Quote
+import com.reddevx.instaquotes.R
+import com.reddevx.instaquotes.models.Quote
 
 class QuotesPagerAdapter(private val quoteList:ArrayList<Quote>,val context: Context) :
     RecyclerView.Adapter<QuotesPagerAdapter.QuotesPagerViewHolder>() {

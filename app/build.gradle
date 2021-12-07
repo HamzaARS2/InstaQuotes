@@ -10,7 +10,7 @@ android {
     compileSdk 30
 
     defaultConfig {
-        applicationId "com.reddevx.thenewquotes"
+        applicationId "com.reddevx.instaquotes"
         minSdk 21
         targetSdk 30
         versionCode 1
@@ -65,7 +65,7 @@ dependencies {
 
 
     // Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
 
 
     // Firebase SDK for Google Analytics

@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.adapters
+package com.reddevx.instaquotes.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.models.Category
-import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
+import com.reddevx.instaquotes.R
+import com.reddevx.instaquotes.models.Category
+import com.reddevx.instaquotes.ui.interfaces.QuoteInteraction
 import de.hdodenhof.circleimageview.CircleImageView
 
 class CategoryAdapter(val categoryList:ArrayList<Category>,private val listener:QuoteInteraction,private val viewType:Int) :

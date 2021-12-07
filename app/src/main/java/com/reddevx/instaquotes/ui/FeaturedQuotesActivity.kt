@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.ui
+package com.reddevx.instaquotes.ui
 
 import android.annotation.SuppressLint
 import android.app.WallpaperManager
@@ -22,11 +22,11 @@ import androidx.viewpager2.widget.ViewPager2
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.adapters.QuotesPagerAdapter
-import com.reddevx.thenewquotes.database.DatabaseManager
-import com.reddevx.thenewquotes.models.Quote
-import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
+import com.reddevx.instaquotes.R
+import com.reddevx.instaquotes.adapters.QuotesPagerAdapter
+import com.reddevx.instaquotes.database.DatabaseManager
+import com.reddevx.instaquotes.models.Quote
+import com.reddevx.instaquotes.ui.interfaces.FavoriteListener
 import kotlinx.coroutines.*
 import kotlin.collections.ArrayList
 
@@ -60,6 +60,7 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         fun setOnFavoriteThirdClickListener(listener: FavoriteListener) {
             tListener = listener
         }
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -102,7 +103,7 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
 
 
         counterTv.text = "${currentPosition + 1} / ${quoteList.size}"
-        quotePosition = currentPosition + 1
+        quotePosition = currentPosition
         quoteViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -114,6 +115,7 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         })
 
         heartCheckBox.setOnClickListener(this)
+
 
     }
 
@@ -203,21 +205,27 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         if (checkBox.isChecked) {
             if (db.insert(currentQuote)) {
                 showToast("This quote is added to Favorite list!")
-                setListeners()
+                setAddListeners()
             } else showToast("Something went wrong!")
         } else {
             if (db.delete(currentQuote)) {
                 showToast("This quote is removed from Favorite list!")
-                setListeners()
+                setRemoveListeners()
             } else showToast("Something went wrong!")
         }
         db.close()
     }
 
-    private fun setListeners() {
+    private fun setAddListeners() {
         mListener?.onFavoriteClick()
         sListener?.onFavoriteClick()
         tListener?.onFavoriteClick()
+    }
+    private fun setRemoveListeners(){
+        mListener?.onFavoriteClick()
+        sListener?.onFavoriteClick()
+        tListener?.onFavoriteClick()
+        sListener?.onFavoriteRemoved(quotePosition)
     }
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.reddevx.thenewquotes">
+    package="com.reddevx.instaquotes">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TheNewQuotes">
         <activity
-            android:name="com.reddevx.thenewquotes.ui.SplashScreenActivity"
+            android:name="com.reddevx.instaquotes.ui.SplashScreenActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -25,27 +25,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.reddevx.thenewquotes.ui.SearchActivity"
+            android:name="com.reddevx.instaquotes.ui.SearchActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.reddevx.thenewquotes.ui.NotificationsActivity"
+            android:name="com.reddevx.instaquotes.ui.NotificationsActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.reddevx.thenewquotes.ui.SettingsActivity"
+            android:name="com.reddevx.instaquotes.ui.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.reddevx.thenewquotes.ui.CategoryQuotesActivity"
+            android:name="com.reddevx.instaquotes.ui.CategoryQuotesActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.reddevx.thenewquotes.ui.FeaturedQuotesActivity"
+            android:name="com.reddevx.instaquotes.ui.FeaturedQuotesActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.reddevx.thenewquotes.ui.MainActivity"
+            android:name="com.reddevx.instaquotes.ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
         </activity>

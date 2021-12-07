@@ -1,4 +1,4 @@
-package com.reddevx.thenewquotes.ui
+package com.reddevx.instaquotes.ui
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -22,12 +22,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.firestore.*
-import com.reddevx.thenewquotes.R
-import com.reddevx.thenewquotes.adapters.MainAdapter
-import com.reddevx.thenewquotes.models.Category
-import com.reddevx.thenewquotes.models.Quote
-import com.reddevx.thenewquotes.ui.interfaces.FavoriteListener
-import com.reddevx.thenewquotes.ui.interfaces.QuoteInteraction
+import com.reddevx.instaquotes.R
+import com.reddevx.instaquotes.adapters.MainAdapter
+import com.reddevx.instaquotes.models.Category
+import com.reddevx.instaquotes.models.Quote
+import com.reddevx.instaquotes.ui.interfaces.FavoriteListener
+import com.reddevx.instaquotes.ui.interfaces.QuoteInteraction
 import kotlinx.coroutines.*
 
 
@@ -262,14 +262,16 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     }
 
     override fun onFavoriteClick() {
-        Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
         mainAdapter.notifyChanges()
     }
-
+    override fun onFavoriteRemoved(position: Int) {
+    }
     override fun onProgressFinished() {
         mainProgessBar.visibility = View.GONE
         mainRecyclerView.visibility = View.VISIBLE
     }
+
+
 
 
 }
