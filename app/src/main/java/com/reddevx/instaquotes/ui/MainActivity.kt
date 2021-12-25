@@ -2,12 +2,14 @@ package com.reddevx.instaquotes.ui
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentSender
 import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,11 +22,17 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
 
 
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.firestore.*
 import com.reddevx.instaquotes.R
 import com.reddevx.instaquotes.adapters.MainAdapter
@@ -36,7 +44,8 @@ import kotlinx.coroutines.*
 
 
 class MainActivity : AppCompatActivity(), QuoteInteraction,
-    NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener ,FavoriteListener,MainAdapter.ProgressBarListener{
+    NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener,
+    FavoriteListener, MainAdapter.ProgressBarListener {
 
 
     object Constants {
@@ -54,11 +63,13 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         const val FIRE_STORE_IMAGE_KEY = "image"
         const val FIRE_STORE_QUOTE_KEY = "quote"
         const val FIRE_STORE_CATEGORY_KEY = "category"
+
+        const val UPDATE_REQ_CODE = 1001
     }
 
     private lateinit var mainAdapter: MainAdapter
     private lateinit var mainRecyclerView: RecyclerView
-    private lateinit var mainProgessBar:ProgressBar
+    private lateinit var mainProgessBar: ProgressBar
 
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
@@ -68,11 +79,10 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     private var doubleBackPressToExit = true
 
 
-    private lateinit var sp:SharedPreferences
-    private lateinit var editor:SharedPreferences.Editor
+    private lateinit var sp: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
 
-
-
+    private lateinit var appUpdateManager: AppUpdateManager
 
 
     @DelicateCoroutinesApi
@@ -95,6 +105,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        appUpdateManager = AppUpdateManagerFactory.create(this)
 
 
         mainAdapter = MainAdapter(
@@ -110,7 +121,10 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
         sp = getSharedPreferences(FeaturedQuotesActivity.AD_INTERSTITIAL_SP_NAME, MODE_PRIVATE)
         editor = sp.edit()
-        FeaturedQuotesActivity.AD_COUNTER = sp.getInt("AdCounter",0)
+        FeaturedQuotesActivity.AD_COUNTER = sp.getInt("AdCounter", 0)
+
+        checkForUpdates()
+
 
     }
 
@@ -119,12 +133,20 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         FeaturedQuotesActivity.setOnFavoriteClickListener(this)
         CategoryQuotesActivity.setOnFavoriteClickListener(this)
         SearchActivity.setOnFavoriteSearchClickListener(this)
+        appUpdateManager
+            .appUpdateInfo
+            .addOnSuccessListener { appUpdateInfo ->
+                // If the update is downloaded but not installed,
+                // notify the user to complete the update.
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    showSnackInstaller()
+                }
+            }
     }
 
 
-
     override fun onBackPressed() {
-        if (!doubleBackPressToExit){
+        if (!doubleBackPressToExit) {
             super.onBackPressed()
             finishAffinity()
             return
@@ -136,13 +158,11 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
 
 
     override fun onStop() {
+        if (appUpdateManager != null){appUpdateManager.unregisterListener(installStateListener())}
         super.onStop()
-
-        editor.putInt("AdCounter",FeaturedQuotesActivity.AD_COUNTER)
+        editor.putInt("AdCounter", FeaturedQuotesActivity.AD_COUNTER)
         editor.apply()
     }
-
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -233,11 +253,11 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             }
             R.id.nav_rate_menu_item -> {
                 val uri = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
-                val intent = Intent(Intent.ACTION_VIEW,uri)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 try {
                     startActivity(intent)
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     Toast.makeText(this, "Error : ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -248,11 +268,11 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         return true
     }
 
-    private fun showDialog(){
+    private fun showDialog() {
         val mDialog: AlertDialog
 
         val dialogInterface = DialogInterface.OnClickListener { dialog, which ->
-            when(which){
+            when (which) {
                 DialogInterface.BUTTON_POSITIVE -> finishAffinity()
                 DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
             }
@@ -261,8 +281,8 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             .setTitle("Exit")
             .setMessage("Are you sure you want to close the app?")
             .apply {
-                setPositiveButton("YES",dialogInterface)
-                setNegativeButton("NO",dialogInterface)
+                setPositiveButton("YES", dialogInterface)
+                setNegativeButton("NO", dialogInterface)
             }
         mDialog = builder.create()
         mDialog.show()
@@ -280,14 +300,53 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     override fun onFavoriteClick() {
         mainAdapter.notifyChanges()
     }
+
     override fun onFavoriteRemoved(position: Int) {
     }
+
     override fun onProgressFinished() {
         mainProgessBar.visibility = View.GONE
         mainRecyclerView.visibility = View.VISIBLE
     }
 
+    private fun checkForUpdates() {
+        appUpdateManager.registerListener(installStateListener())
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+            ) {
+                // Request the update.
+                try {
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        AppUpdateType.FLEXIBLE,
+                        this,
+                        Constants.UPDATE_REQ_CODE
+                    )
+                } catch (e: IntentSender.SendIntentException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+            .addOnFailureListener {
+                Log.e("Update failed", "Update failed${it.message.toString()}")
+            }
+    }
+
+    private fun showSnackInstaller() {
+        Snackbar.make(findViewById(android.R.id.content), "Update downloaded", LENGTH_INDEFINITE)
+            .setAction("Install") { appUpdateManager.completeUpdate() }
+            .show()
+    }
 
 
 
-}
+    private fun installStateListener() : InstallStateUpdatedListener  = InstallStateUpdatedListener { state ->
+            if (state.installStatus() == InstallStatus.DOWNLOADED){
+                showSnackInstaller()
+            }
+        }
+    }
+
+
+

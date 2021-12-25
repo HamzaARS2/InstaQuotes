@@ -140,7 +140,7 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
 
         if (AD_COUNTER == 5){
             val adRequest = AdRequest.Builder().build()
-            InterstitialAd.load(this,"ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
+            InterstitialAd.load(this,"ca-app-pub-3869825072549924/4762072245", adRequest, object : InterstitialAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     Log.d("LoadAdsFailed", adError.message)
                     mInterstitialAd = null
@@ -203,7 +203,7 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
                         val quoteToShare = quoteList[quotePosition].quoteText
                         putExtra(
                             Intent.EXTRA_TEXT,
-                            "${quoteToShare} \n https://play.google.com/store/apps/details?id=com.rm.instaquotes"
+                            "${quoteToShare} \n https://play.google.com/store/apps/details?id=$packageName"
                         )
                     }
                 }
@@ -279,13 +279,6 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         sListener?.onFavoriteRemoved(quotePosition)
     }
 
-    private fun showInterstitialAd(){
-        if (mInterstitialAd != null) {
-            mInterstitialAd?.show(this)
-        } else {
-            Log.d("TAG", "The interstitial ad wasn't ready yet.")
-        }
-    }
 
 
 }
