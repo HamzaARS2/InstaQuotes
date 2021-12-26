@@ -346,6 +346,8 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
                 showSnackInstaller()
             }
         }
+
+
     }
 
 

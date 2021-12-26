@@ -1,11 +1,12 @@
 package com.reddevx.instaquotes.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.appcompat.app.AppCompatDelegate
 import com.reddevx.instaquotes.R
 
 
@@ -13,12 +14,20 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
+        checkNightMode()
+        Handler(Looper.myLooper()!!).postDelayed({
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }, 3000)
 
-            Handler(Looper.myLooper()!!).postDelayed({
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }, 3000)
 
+    }
+
+    private fun checkNightMode() {
+        val sp: SharedPreferences =
+            getSharedPreferences(SettingsActivity.NIGHT_MODE_STATE, MODE_PRIVATE)
+        SettingsActivity.NIGHT_MODE = sp.getBoolean(SettingsActivity.NIGHT_MODE_STATE, false)
+        if (SettingsActivity.NIGHT_MODE){AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)}
 
     }
 
@@ -62,6 +71,7 @@ class SplashScreenActivity : AppCompatActivity() {
 //        mDialog.show()
 //
 //    }
+
 }
 
 
