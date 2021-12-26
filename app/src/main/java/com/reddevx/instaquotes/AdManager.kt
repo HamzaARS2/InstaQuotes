@@ -24,6 +24,7 @@ class AdManager(val context: Context) {
         const val COUNTER_SP = "AdCounter"
         var mInterstitialAd: InterstitialAd? = null
         var AD_COUNTER = 0
+        var IS_LOADED = false
     }
 
 
@@ -42,30 +43,28 @@ class AdManager(val context: Context) {
     }
 
     fun loadAd() {
-
+        if (!IS_LOADED) {
             val adRequest = AdRequest.Builder().build()
             InterstitialAd.load(
                 context,
-                "ca-app-pub-3940256099942544/1033173712",
+                "ca-app-pub-3869825072549924/4762072245",
                 adRequest,
                 object : InterstitialAdLoadCallback() {
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         Log.d("LoadAdsFailed", adError.message)
-                        showToast("Failed")
                         mInterstitialAd = null
                     }
 
                     override fun onAdLoaded(interstitialAd: InterstitialAd) {
                         Log.d("LoadAdsFailed", "Ad was loaded.")
                         mInterstitialAd = interstitialAd
-
+                        IS_LOADED = true
 
                     }
                 })
             mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
                     Log.d("TAG", "Ad was dismissed.")
-                    mInterstitialAd = null
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
@@ -77,19 +76,18 @@ class AdManager(val context: Context) {
                     mInterstitialAd = null
                 }
             }
+        }
     }
 
     fun showInterstitialAd() {
-        showToast("counter = $AD_COUNTER")
         if (mInterstitialAd != null) {
-            if (AD_COUNTER == 2) {
-                mInterstitialAd!!.show(context as Activity)
+            if (AD_COUNTER == 5) {
                 AD_COUNTER = 0
+                mInterstitialAd!!.show(context as Activity)
+                IS_LOADED = false
             } else {
                 AD_COUNTER = AD_COUNTER.inc()
             }
-        } else {
-            showToast("ad is null")
         }
     }
 

@@ -22,16 +22,10 @@ class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:Quot
         holder.apply {
 
             quote.text = data[position].quoteText
-
                 Glide.with(holder.itemView)
                     .load(data[position].imageUrl)
                     .into(quoteImage)
-
             }
-
-
-
-
     }
 
     override fun getItemCount(): Int = data.size
@@ -48,8 +42,9 @@ class QuotesAdapter(private val data:ArrayList<Quote>, private val listener:Quot
         }
 
         override fun onClick(v: View?) {
-            if (bindingAdapterPosition != RecyclerView.NO_POSITION)
-            listener?.onQuoteClick(data,bindingAdapterPosition)
+            if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                listener?.onQuoteClick(data, bindingAdapterPosition)
+            }
         }
 
     }
