@@ -26,6 +26,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.reddevx.instaquotes.AdManager
 import com.reddevx.instaquotes.R
 import com.reddevx.instaquotes.adapters.QuotesPagerAdapter
 import com.reddevx.instaquotes.database.DatabaseManager
@@ -46,18 +47,11 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
 
     private val db = DatabaseManager.invoke(this)!!
 
-    private var mInterstitialAd:InterstitialAd? = null
+    private lateinit var adManger: AdManager
 
     private var quotePosition: Int = -1
 
-    private lateinit var preferences:SharedPreferences
-    private lateinit var editor:SharedPreferences.Editor
-
-
-
     companion object {
-         const val AD_INTERSTITIAL_SP_NAME = "interstitialADState"
-        var AD_COUNTER = 0
         private var mListener: FavoriteListener? = null
         private var sListener: FavoriteListener? = null
         private var tListener: FavoriteListener? = null
@@ -87,6 +81,7 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         counterTv = findViewById(R.id.page_menu_counter_tv)
+
 
 
         quoteList =
@@ -128,48 +123,13 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         })
 
         heartCheckBox.setOnClickListener(this)
-        preferences = getSharedPreferences(AD_INTERSTITIAL_SP_NAME, MODE_PRIVATE)
-        editor = preferences.edit()
-        setInterstitialAd()
-
+        adManger = AdManager(this)
+        adManger.showInterstitialAd()
 
 
     }
 
-    private fun setInterstitialAd(){
 
-        if (AD_COUNTER == 5){
-            val adRequest = AdRequest.Builder().build()
-            InterstitialAd.load(this,"ca-app-pub-3869825072549924/4762072245", adRequest, object : InterstitialAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d("LoadAdsFailed", adError.message)
-                    mInterstitialAd = null
-                }
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.d("LoadAdsFailed", "Ad was loaded.")
-                    mInterstitialAd = interstitialAd
-                    mInterstitialAd!!.show(this@FeaturedQuotesActivity)
-                }
-            })
-            mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
-                override fun onAdDismissedFullScreenContent() {
-                    Log.d("TAG", "Ad was dismissed.")
-                }
-
-                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                    Log.d("TAG", "Ad failed to show.")
-                }
-
-                override fun onAdShowedFullScreenContent() {
-                    Log.d("TAG", "Ad showed fullscreen content.")
-                    mInterstitialAd = null
-                }
-            }
-            AD_COUNTER = 0
-        } else{
-            AD_COUNTER = AD_COUNTER.inc()
-        }
-    }
     private fun showToast(content: String) {
         Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
     }
@@ -272,13 +232,13 @@ class FeaturedQuotesActivity : AppCompatActivity(), View.OnClickListener {
         sListener?.onFavoriteClick()
         tListener?.onFavoriteClick()
     }
-    private fun setRemoveListeners(){
+
+    private fun setRemoveListeners() {
         mListener?.onFavoriteClick()
         sListener?.onFavoriteClick()
         tListener?.onFavoriteClick()
         sListener?.onFavoriteRemoved(quotePosition)
     }
-
 
 
 }

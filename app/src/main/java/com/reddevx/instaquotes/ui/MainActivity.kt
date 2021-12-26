@@ -34,6 +34,7 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.firestore.*
+import com.reddevx.instaquotes.AdManager
 import com.reddevx.instaquotes.R
 import com.reddevx.instaquotes.adapters.MainAdapter
 import com.reddevx.instaquotes.models.Category
@@ -78,9 +79,9 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     private lateinit var refreshLayout: SwipeRefreshLayout
     private var doubleBackPressToExit = true
 
+    private lateinit var adManager:AdManager
 
-    private lateinit var sp: SharedPreferences
-    private lateinit var editor: SharedPreferences.Editor
+
 
     private lateinit var appUpdateManager: AppUpdateManager
 
@@ -99,6 +100,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
         mainProgessBar = findViewById(R.id.main_progress_bar)
 
 
+        adManager = AdManager(this)
         navigationView.setNavigationItemSelectedListener(this)
         refreshLayout.setOnRefreshListener(this)
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
@@ -118,18 +120,17 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
             hasFixedSize()
 
         }
-
-        sp = getSharedPreferences(FeaturedQuotesActivity.AD_INTERSTITIAL_SP_NAME, MODE_PRIVATE)
-        editor = sp.edit()
-        FeaturedQuotesActivity.AD_COUNTER = sp.getInt("AdCounter", 0)
-
         checkForUpdates()
+        adManager.prepareAdCounter()
 
 
     }
 
     override fun onResume() {
         super.onResume()
+
+        // Prepare interstitial ad
+        adManager.loadAd()
         FeaturedQuotesActivity.setOnFavoriteClickListener(this)
         CategoryQuotesActivity.setOnFavoriteClickListener(this)
         SearchActivity.setOnFavoriteSearchClickListener(this)
@@ -160,8 +161,7 @@ class MainActivity : AppCompatActivity(), QuoteInteraction,
     override fun onStop() {
         if (appUpdateManager != null){appUpdateManager.unregisterListener(installStateListener())}
         super.onStop()
-        editor.putInt("AdCounter", FeaturedQuotesActivity.AD_COUNTER)
-        editor.apply()
+        adManager.saveCounterValue()
     }
 
 
