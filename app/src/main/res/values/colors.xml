@@ -9,9 +9,36 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black_25">#5C5C5C</color>
 
-       <!--  Dark mode colors -->
+
+    <color name="toolbar_color">#FFFFFF</color>
+    <color name="text_color_1">#000000</color>
+    <color name="status_bar_color">#BEBEBE</color>
+    <color name="recent_quote_bg_color">#FFFFFF</color>
+    <color name="recent_quote_heart_bg">@color/status_bar_color</color>
+    <color name="navigation_bg">@color/white</color>
+    <color name="bg_color_1">#f8f9fa</color>
+    <color name="bg_color_2">#9A9A9A</color>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <color name="primary">#8A000000</color>
     <color name="colorPrimaryVariant">#706D6D</color>
     <color name="black_75">#222222</color>
     <color name="black_85">#151515</color>
+    <color name="quote_text_color">#FF000000</color>
+
+    <color name="navigation_header_bg">#E1E3E4</color>
+
 </resources>

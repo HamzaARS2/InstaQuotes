@@ -7,7 +7,7 @@
     android:layout_gravity="center_horizontal"
     android:layout_marginHorizontal="7dp"
     android:layout_marginVertical="14dp"
-    android:background="#f8f9fa"
+    android:background="@color/bg_color_1"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -35,7 +35,7 @@
         android:autoSizeTextType="uniform"
         android:lines="1"
         android:text="Friendship"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color_1"
         android:textSize="15sp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"

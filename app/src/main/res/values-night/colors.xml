@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Dark mode colors -->
+    <color name="primary">#8A000000</color>
+    <color name="colorPrimaryVariant">#706D6D</color>
+    <color name="black_75">#222222</color>
+    <color name="black_85">#151515</color>
+    <color name="quote_text_color">#FFFFFFFF</color>
+
+    <color name="status_bar_color">#FD101010</color>
+    <color name="toolbar_color">#FD101010</color>
+    <color name="bg_color_1">#252525</color>
+    <color name="bg_color_2">#535353</color>
+    <color name="recent_quote_bg_color">#121111</color>
+    <color name="text_color_1">#FFFFFF</color>
+    <color name="recent_quote_heart_bg">#FD333232</color>
+    <color name="navigation_bg">#2E2D2D</color>
+    <color name="navigation_header_bg">#FD1C1C1C</color>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</resources>

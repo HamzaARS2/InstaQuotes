@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:background="#E1E3E4">
+    android:background="@color/navigation_header_bg">
 
     <ImageView
         android:id="@+id/shapeableImageView"
@@ -16,7 +16,8 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        />
 
     <TextView
         android:id="@+id/textView"
@@ -27,7 +28,7 @@
         android:gravity="bottom"
         android:padding="2dp"
         android:text="@string/AppName"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color_1"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
@@ -43,7 +44,7 @@
         android:layout_marginStart="16dp"
         android:padding="2dp"
         android:text="The Awesome Quotation App!"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color_1"
         android:textSize="12sp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/shapeableImageView"

@@ -21,7 +21,7 @@ class NotificationsActivity : AppCompatActivity() {
         notificationsToolbar.title = ""
         setSupportActionBar(notificationsToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        noDataLayout.visibility = View.VISIBLE
+
 //        if (intent == null){
 //            // No data
 //

@@ -19,7 +19,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/recent_quote_bg_color"
+        >
 
         <TextView
             android:id="@+id/recent_quote_category_tv"
@@ -49,7 +51,7 @@
             android:maxLines="2"
             android:padding="6dp"
             android:text="When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune."
-            android:textColor="@color/black"
+            android:textColor="@color/quote_text_color"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -110,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
-            android:background="@color/white"
+            android:background="@color/recent_quote_bg_color"
             android:src="@drawable/ic_share"
             android:scaleType="centerInside"
 

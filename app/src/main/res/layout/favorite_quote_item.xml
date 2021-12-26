@@ -7,7 +7,8 @@
     android:layout_margin="6dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    android:background="@color/recent_quote_bg_color">
 
     <ImageView
         android:id="@+id/favorite_quote_img"
@@ -38,9 +39,8 @@
         android:maxLines="2"
         android:padding="6dp"
         android:text="When brains were passed out, everyone was pleased with his brains; but when fortunes were given out, no one was satisfied with his fortune."
-        android:textColor="@color/black"
+        android:textColor="@color/text_color_1"
         android:textSize="15sp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
@@ -98,7 +98,7 @@
         android:id="@+id/favorite_quote_share_btn"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:background="#f8f9fa"
+        android:background="@color/recent_quote_bg_color"
         android:scaleType="centerInside"
         android:src="@drawable/ic_share"
 
